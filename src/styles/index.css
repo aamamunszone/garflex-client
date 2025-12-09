@@ -1,0 +1,28 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* Tailwind CSS */
+@import 'tailwindcss';
+
+/* Daisy UI */
+@plugin "daisyui" {
+  themes: garflex-light --default, garflex-dark --prefersdark;
+}
+
+/* Custom GarFlex Light Theme */
+[data-theme='garflex-light'] {
+}
+
+/* Custom GarFlex Dark Theme */
+[data-theme='garflex-dark'] {
+}
+
+/* Global Styles */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* For Debugging */
+/* * {
+  border: 1px solid red;
+} */
