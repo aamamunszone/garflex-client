@@ -46,8 +46,8 @@ const Header = () => {
           {/* Right Side - (CTA Buttons) */}
           <div className="navbar-end gap-3">
             <ThemeToggleButton />
-            <Link>Login</Link>
-            <Link>Get Started</Link>
+            <Link to="/auth/login">Login</Link>
+            <Link to="/auth/register">Get Started</Link>
           </div>
         </nav>
       </Container>
