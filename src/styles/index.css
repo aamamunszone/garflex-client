@@ -11,10 +11,50 @@
 
 /* Custom GarFlex Light Theme */
 [data-theme='garflex-light'] {
+  --color-base-100: #ffffff;
+  --color-base-200: #f5f5f7;
+  --color-base-300: #e8e8ed;
+  --color-base-content: #1d1d1f;
+  --color-primary: #00b894;
+  --color-primary-content: #ffffff;
+  --color-secondary: #6c5ce7;
+  --color-secondary-content: #ffffff;
+  --color-accent: #fd79a8;
+  --color-accent-content: #ffffff;
+  --color-neutral: #2d3436;
+  --color-neutral-content: #ffffff;
+  --color-info: #00cec9;
+  --color-info-content: #ffffff;
+  --color-success: #00b894;
+  --color-success-content: #ffffff;
+  --color-warning: #fdcb6e;
+  --color-warning-content: #2d3436;
+  --color-error: #ff7675;
+  --color-error-content: #ffffff;
 }
 
 /* Custom GarFlex Dark Theme */
 [data-theme='garflex-dark'] {
+  --color-base-100: #1a1a1d;
+  --color-base-200: #0f0f11;
+  --color-base-300: #2d2d30;
+  --color-base-content: #e5e5e7;
+  --color-primary: #00b894;
+  --color-primary-content: #ffffff;
+  --color-secondary: #a29bfe;
+  --color-secondary-content: #1a1a1d;
+  --color-accent: #fd79a8;
+  --color-accent-content: #ffffff;
+  --color-neutral: #dfe6e9;
+  --color-neutral-content: #1a1a1d;
+  --color-info: #00cec9;
+  --color-info-content: #1a1a1d;
+  --color-success: #00b894;
+  --color-success-content: #ffffff;
+  --color-warning: #fdcb6e;
+  --color-warning-content: #1a1a1d;
+  --color-error: #ff7675;
+  --color-error-content: #ffffff;
 }
 
 /* Global Styles */
