@@ -10,7 +10,7 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
 
 const Register = () => {
-  const { createUser, updateUserProfile } = useAuth();
+  const { createUser, updateUserProfile, googleSignIn } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,7 +68,50 @@ const Register = () => {
         email: userEmail,
         photoURL: imageURL,
         role: userRole,
-        status: 'pending',
+        status: 'Pending',
+        createdAt: new Date().toISOString(),
+      };
+
+      const response = await axiosSecure.post('/users', userInfo);
+      // console.log('After user saved in database:', response);
+      if (response.data.success) {
+        toast.success(
+          `Congratulations ${
+            user?.displayName || 'User'
+          }. 🎉 Registration successful!`
+        );
+
+        navigate(location.state?.from?.pathname || '/', { replace: true });
+      }
+    } catch (error) {
+      const errorMessage = firebaseErrorMessage(error.code);
+      console.error(error.message);
+      // console.log(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const userCredential = await googleSignIn();
+      const user = userCredential.user;
+      // console.log(user);
+
+      const userName = user.displayName;
+      const userEmail = user.email;
+      const imageURL = user.photoURL;
+
+      // Create User in the Database
+      const userInfo = {
+        name: userName,
+        email: userEmail,
+        photoURL: imageURL,
+        role: 'Buyer',
+        status: 'Pending',
         createdAt: new Date().toISOString(),
       };
 
@@ -281,10 +324,16 @@ const Register = () => {
         {/* Google Register Button */}
         <button
           type="submit"
+          onClick={handleGoogleSignIn}
+          disabled={isSubmitting}
           className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 flex items-center gap-2"
         >
           <FcGoogle size={22} />
-          <span className="font-medium">Sign up with Google</span>
+          {isSubmitting ? (
+            <span className="font-medium">Signing up with Google...</span>
+          ) : (
+            <span className="font-medium">Sign up with Google</span>
+          )}
         </button>
 
         {/* Already have account */}
