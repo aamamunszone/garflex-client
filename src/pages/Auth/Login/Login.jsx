@@ -8,7 +8,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
-  const { signInUser } = useAuth();
+  const { signInUser, googleSignIn } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +37,31 @@ const Login = () => {
 
       toast.success(
         `Congratulations ${user?.displayName || 'User'}! 🎉 Login successful.`
+      );
+
+      navigate(location.state?.from?.pathname || '/', { replace: true });
+    } catch (error) {
+      const errorMessage = firebaseErrorMessage(error.code);
+      console.error(error.message);
+      // console.log(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const userCredential = await googleSignIn();
+      const user = userCredential.user;
+      // console.log(user);
+
+      toast.success(
+        `Congratulations ${
+          user?.displayName || 'User'
+        }. 🎉 Login successful!`
       );
 
       navigate(location.state?.from?.pathname || '/', { replace: true });
@@ -134,9 +159,10 @@ const Login = () => {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        {/* Google Register Button */}
+        {/* Google Login Button */}
         <button
           type="submit"
+          onClick={handleGoogleSignIn}
           disabled={isSubmitting}
           className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 flex items-center gap-2"
         >
