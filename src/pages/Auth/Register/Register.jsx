@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
+import GoogleAuthButton from '../../../components/ui/GoogleAuthButton/GoogleAuthButton';
 
 const Register = () => {
-  const { createUser, updateUserProfile, googleSignIn } = useAuth();
+  const { createUser, updateUserProfile } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,49 +68,6 @@ const Register = () => {
         email: userEmail,
         photoURL: imageURL,
         role: userRole,
-        status: 'Pending',
-        createdAt: new Date().toISOString(),
-      };
-
-      const response = await axiosSecure.post('/users', userInfo);
-      // console.log('After user saved in database:', response);
-      if (response.data.success) {
-        toast.success(
-          `Congratulations ${
-            user?.displayName || 'User'
-          }. 🎉 Registration successful!`
-        );
-
-        navigate(location.state?.from?.pathname || '/', { replace: true });
-      }
-    } catch (error) {
-      const errorMessage = firebaseErrorMessage(error.code);
-      console.error(error.message);
-      // console.log(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const userCredential = await googleSignIn();
-      const user = userCredential.user;
-      // console.log(user);
-
-      const userName = user.displayName;
-      const userEmail = user.email;
-      const imageURL = user.photoURL;
-
-      // Create User in the Database
-      const userInfo = {
-        name: userName,
-        email: userEmail,
-        photoURL: imageURL,
-        role: 'Buyer',
         status: 'Pending',
         createdAt: new Date().toISOString(),
       };
@@ -322,19 +279,7 @@ const Register = () => {
         </div>
 
         {/* Google Register Button */}
-        <button
-          type="submit"
-          onClick={handleGoogleSignIn}
-          disabled={isSubmitting}
-          className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 flex items-center gap-2"
-        >
-          <FcGoogle size={22} />
-          {isSubmitting ? (
-            <span className="font-medium">Signing up with Google...</span>
-          ) : (
-            <span className="font-medium">Sign up with Google</span>
-          )}
-        </button>
+        <GoogleAuthButton />
 
         {/* Already have account */}
         <p className="text-center text-sm mt-6">

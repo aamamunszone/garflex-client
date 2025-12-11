@@ -4,11 +4,11 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import toast from 'react-hot-toast';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
-import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import GoogleAuthButton from '../../../components/ui/GoogleAuthButton/GoogleAuthButton';
 
 const Login = () => {
-  const { signInUser, googleSignIn } = useAuth();
+  const { signInUser } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,31 +37,6 @@ const Login = () => {
 
       toast.success(
         `Congratulations ${user?.displayName || 'User'}! 🎉 Login successful.`
-      );
-
-      navigate(location.state?.from?.pathname || '/', { replace: true });
-    } catch (error) {
-      const errorMessage = firebaseErrorMessage(error.code);
-      console.error(error.message);
-      // console.log(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const userCredential = await googleSignIn();
-      const user = userCredential.user;
-      // console.log(user);
-
-      toast.success(
-        `Congratulations ${
-          user?.displayName || 'User'
-        }. 🎉 Login successful!`
       );
 
       navigate(location.state?.from?.pathname || '/', { replace: true });
@@ -160,19 +135,7 @@ const Login = () => {
         </div>
 
         {/* Google Login Button */}
-        <button
-          type="submit"
-          onClick={handleGoogleSignIn}
-          disabled={isSubmitting}
-          className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 flex items-center gap-2"
-        >
-          <FcGoogle size={22} />
-          {isSubmitting ? (
-            <span className="font-medium">Signing in with Google...</span>
-          ) : (
-            <span className="font-medium">Sign in with Google</span>
-          )}
-        </button>
+        <GoogleAuthButton />
 
         {/* Already have account */}
         <p className="text-center text-sm mt-6">
