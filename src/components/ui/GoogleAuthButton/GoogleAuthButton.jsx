@@ -5,17 +5,14 @@ import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
 import { useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
+import WithDotLoaderButton from '../WithDotLoaderButton/WithDotLoaderButton';
 
 const GoogleAuthButton = () => {
   const { googleSignIn } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
-
   const axiosSecure = useAxiosSecure();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
 
@@ -24,27 +21,24 @@ const GoogleAuthButton = () => {
       const user = userCredential.user;
       // console.log(user);
 
-      const userName = user.displayName;
-      const userEmail = user.email;
-      const imageURL = user.photoURL;
-
       // Create User in the Database
       const userInfo = {
-        name: userName,
-        email: userEmail,
-        photoURL: imageURL,
-        role: 'Buyer',
-        status: 'Pending',
-        createdAt: new Date().toISOString(),
+        uid: user.uid,
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        role: 'buyer',
+        status: 'pending',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastLoginAt: new Date(),
       };
 
-      const response = await axiosSecure.post('/users', userInfo);
+      const response = await axiosSecure.post('/users/google', userInfo);
       // console.log('After user saved in database:', response);
       if (response.data.success) {
         toast.success(
-          `Congratulations ${
-            user?.displayName || 'User'
-          }. 🎉 Registration successful!`
+          `Congratulations ${user?.displayName || 'User'}. 🎉 Login successful!`
         );
 
         navigate(location.state?.from?.pathname || '/', { replace: true });
@@ -69,9 +63,11 @@ const GoogleAuthButton = () => {
       >
         <FcGoogle size={22} />
         {isSubmitting ? (
-          <span className="font-medium">Signing in with Google...</span>
+          <span className="font-medium">
+            <WithDotLoaderButton>Continue with Google</WithDotLoaderButton>
+          </span>
         ) : (
-          <span className="font-medium">Sign in with Google</span>
+          <span className="font-medium">Continue with Google</span>
         )}
       </button>
     </>
