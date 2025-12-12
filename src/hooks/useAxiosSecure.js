@@ -2,9 +2,10 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import useAuth from './useAuth';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
 });
 
 const useAxiosSecure = () => {
@@ -33,14 +34,50 @@ const useAxiosSecure = () => {
       async (error) => {
         const statusCode = error?.response?.status;
 
-        if (statusCode === 401 || statusCode === 403) {
+        // Handle 401 Unauthorized
+        if (statusCode === 401) {
           try {
+            toast.error('Session expired. Please login again.');
             await signOutUser();
-            navigate('/auth/login');
+            navigate('/auth/login', {
+              state: { from: window.location.pathname },
+              replace: true,
+            });
           } catch (error) {
+            toast.error('Session expired. Please login again.');
             console.error('Error during auto sign-out:', error);
+            await signOutUser();
+            navigate('/auth/login', { replace: true });
           }
         }
+
+        // Handle 403 Forbidden - User doesn't have permission
+        if (statusCode === 403) {
+          toast.error('You do not have permission to access this resource.');
+          console.error('Access Forbidden: Insufficient permissions.');
+          navigate('/error/unauthorized', { replace: true });
+        }
+
+        // Handle 404 Not Found
+        if (statusCode === 404) {
+          toast.error('Requested resource not found.');
+          console.error('Resource not found');
+          navigate('/error/not-found', { replace: true });
+        }
+
+        // Handle 500 Internal Server Error
+        if (statusCode === 500) {
+          toast.error('Server crashed. Please try again later.');
+          console.error('Server error occurred');
+          navigate('/error/server-crash', { replace: true });
+        }
+
+        console.error('API Error:', {
+          status: statusCode,
+          message: error.response?.data?.message || error.message,
+          endpoint: error.config?.url,
+        });
+
         return Promise.reject(error);
       }
     );
@@ -50,7 +87,7 @@ const useAxiosSecure = () => {
       axiosSecure.interceptors.request.eject(requestInterceptor);
       axiosSecure.interceptors.response.eject(responseInterceptor);
     };
-  }, [user?.accessToken, navigate, signOutUser]);
+  }, [user, navigate, signOutUser]);
 
   return axiosSecure;
 };
