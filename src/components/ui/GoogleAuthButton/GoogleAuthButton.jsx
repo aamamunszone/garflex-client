@@ -21,12 +21,14 @@ const GoogleAuthButton = () => {
       const user = userCredential.user;
       // console.log(user);
 
+      const token = user?.accessToken;
+
       // Create User in the Database
       const userInfo = {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
-        photoURL: user.photoURL,
+        photoURL: user.photoURL || null,
         role: 'buyer',
         status: 'pending',
         createdAt: new Date(),
@@ -34,13 +36,25 @@ const GoogleAuthButton = () => {
         lastLoginAt: new Date(),
       };
 
-      const response = await axiosSecure.post('/users/google', userInfo);
+      const response = await axiosSecure.post('/users/google', userInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // console.log('After user saved in database:', response);
-      if (response.data.success) {
+      if (response.status === 201 && response.data.success) {
+        // Registration success
         toast.success(
-          `Congratulations ${user?.displayName || 'User'}. 🎉 Login successful!`
+          `Congratulations ${
+            user?.displayName || 'User'
+          }! 🎉 Registration successful.`
         );
-
+        navigate(location.state?.from?.pathname || '/', { replace: true });
+      } else if (response.status === 200 && response.data.success) {
+        // Login success
+        toast.success(
+          `Welcome back ${user?.displayName || 'User'}! 🎉 Login successful.`
+        );
         navigate(location.state?.from?.pathname || '/', { replace: true });
       }
     } catch (error) {

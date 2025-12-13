@@ -61,7 +61,7 @@ const Register = () => {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
-        photoURL: user.photoURL,
+        photoURL: user.photoURL || null,
         role: userRole,
         status: 'pending',
         createdAt: new Date(),

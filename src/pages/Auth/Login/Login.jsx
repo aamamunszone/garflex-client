@@ -32,12 +32,18 @@ const Login = () => {
       const user = userCredential.user;
       // console.log(user);
 
+      const token = await user?.accessToken;
+
       // Build user info for backend sync
       const userInfo = {
         email: user.email,
       };
 
-      const response = await axiosSecure.patch('/users/login', userInfo);
+      const response = await axiosSecure.patch('/users/login', userInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // console.log('After user saved in database:', response);
       if (response.data.success) {
         toast.success(

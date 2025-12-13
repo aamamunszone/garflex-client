@@ -15,8 +15,8 @@ const useAxiosSecure = () => {
   useEffect(() => {
     // ===== Request Interceptor =====
     const requestInterceptor = axiosSecure.interceptors.request.use(
-      (config) => {
-        const token = user?.accessToken;
+      async (config) => {
+        const token = await user?.accessToken;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -36,22 +36,20 @@ const useAxiosSecure = () => {
 
         // Handle 401 Unauthorized
         if (statusCode === 401) {
+          toast.error('Your session has expired. Please log in again.');
           try {
-            toast.error('Session expired. Please login again.');
             await signOutUser();
+          } catch (error) {
+            console.error('Error during auto sign-out:', error);
+          } finally {
             navigate('/auth/login', {
               state: { from: window.location.pathname },
               replace: true,
             });
-          } catch (error) {
-            toast.error('Session expired. Please login again.');
-            console.error('Error during auto sign-out:', error);
-            await signOutUser();
-            navigate('/auth/login', { replace: true });
           }
         }
 
-        // Handle 403 Forbidden - User doesn't have permission
+        // Handle 403 Forbidden
         if (statusCode === 403) {
           toast.error('You do not have permission to access this resource.');
           console.error('Access Forbidden: Insufficient permissions.');
