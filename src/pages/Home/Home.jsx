@@ -1,6 +1,7 @@
 import React from 'react';
 import HeroBanner from '../../components/home/HeroBanner/HeroBanner';
 import HowItWorks from '../../components/home/HowItWorks/HowItWorks';
+import CustomerFeedback from '../../components/home/CustomerFeedback/CustomerFeedback';
 
 const Home = () => {
   return (
@@ -15,6 +16,11 @@ const Home = () => {
       {/* HowItWorks Section */}
       <section>
         <HowItWorks />
+      </section>
+
+      {/* CustomerFeedback Section */}
+      <section>
+        <CustomerFeedback />
       </section>
     </div>
   );
