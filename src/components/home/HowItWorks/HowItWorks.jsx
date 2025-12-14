@@ -79,7 +79,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <Container className="py-10 overflow-hidden">
+    <Container className="py-10 overflow-hidden rounded-xl bg-base-100">
       {/* Section Header */}
       <div className="text-center mb-16 space-y-4 relative z-10">
         <motion.div
@@ -117,7 +117,7 @@ const HowItWorks = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative px-4"
       >
         {/* Connector Line (Desktop Only) */}
         <div className="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-linear-to-r from-base-300 via-primary/30 to-base-300 border-t-2 border-dashed border-base-300 -z-10"></div>

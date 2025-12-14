@@ -73,7 +73,7 @@ const GoogleAuthButton = () => {
         type="submit"
         onClick={handleGoogleSignIn}
         disabled={isSubmitting}
-        className="btn w-full bg-white border border-gray-300 hover:bg-gray-100 flex items-center gap-2"
+        className="btn w-full border rounded-md bg-base-100 text-base-content border-gray-300 flex items-center gap-2"
       >
         <FcGoogle size={22} />
         {isSubmitting ? (

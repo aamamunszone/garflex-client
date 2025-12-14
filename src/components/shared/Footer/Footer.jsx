@@ -71,7 +71,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="relative bg-base-200/50 border-t border-base-300 mt-20">
+    <div className="relative bg-base-200 border-t border-base-300 mt-20">
       <Container className="py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">

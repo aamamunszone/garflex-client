@@ -59,7 +59,7 @@
 
 /* Global Styles */
 body {
-  background-color: #eaeced;
+  background-color: var(--color-base-200);
   font-family: 'Inter', sans-serif;
 }
 
