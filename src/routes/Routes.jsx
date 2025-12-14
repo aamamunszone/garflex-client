@@ -7,6 +7,7 @@ import ErrorLayout from '../layouts/ErrorLayout/ErrorLayout';
 import Unauthorized from '../pages/Errors/Unauthorized/Unauthorized';
 import NotFound from '../pages/Errors/NotFound/NotFound';
 import ServerCrash from '../pages/Errors/ServerCrash/ServerCrash';
+import AllProducts from '../pages/Products/AllProducts/AllProducts';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: 'auth/register', Component: Register },
       { path: 'auth/login', Component: Login },
+      { path: 'all-products', Component: AllProducts },
     ],
   },
 
