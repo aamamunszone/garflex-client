@@ -56,137 +56,139 @@ const Header = () => {
   const navItems = user ? privateNavItems : publicNavItems;
 
   return (
-    <Container className="bg-base-100/80 backdrop-blur-sm rounded-xl px-8 py-5 shadow-sm">
-      <nav className="flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          {/* Transparent linear Logo Design */}
-          <div className="relative w-12 h-12">
-            {/* Animated Glow Effect */}
-            <div className="absolute inset-0 bg-linear-to-br from-primary via-secondary to-accent rounded-2xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500"></div>
+    <div className="w-full">
+      <Container className="bg-base-100/80 backdrop-blur-sm rounded-xl px-8 py-5 shadow-sm">
+        <nav className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            {/* Transparent linear Logo Design */}
+            <div className="relative w-12 h-12">
+              {/* Animated Glow Effect */}
+              <div className="absolute inset-0 bg-linear-to-br from-primary via-secondary to-accent rounded-2xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500"></div>
 
-            {/* Main Logo Container */}
-            <div className="relative w-full h-full bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-primary/10 group-hover:border-primary/30 transition-all duration-500 shadow-lg">
-              {/* G Letter with Modern Typography */}
-              <div className="relative flex items-center justify-center">
-                <span className="text-3xl font-black bg-linear-to-br from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-sm">
-                  G
-                </span>
-                {/* Flex Indicator Dot */}
-                <span className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-linear-to-br from-accent to-secondary rounded-full shadow-lg shadow-accent/50 animate-pulse"></span>
+              {/* Main Logo Container */}
+              <div className="relative w-full h-full bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-primary/10 group-hover:border-primary/30 transition-all duration-500 shadow-lg">
+                {/* G Letter with Modern Typography */}
+                <div className="relative flex items-center justify-center">
+                  <span className="text-3xl font-black bg-linear-to-br from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-sm">
+                    G
+                  </span>
+                  {/* Flex Indicator Dot */}
+                  <span className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-linear-to-br from-accent to-secondary rounded-full shadow-lg shadow-accent/50 animate-pulse"></span>
+                </div>
               </div>
+
+              {/* Corner Accent Lines */}
+              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/40 rounded-tl-lg"></div>
+              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-secondary/40 rounded-br-lg"></div>
             </div>
 
-            {/* Corner Accent Lines */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/40 rounded-tl-lg"></div>
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-secondary/40 rounded-br-lg"></div>
-          </div>
+            {/* Brand Text */}
+            <div className="flex flex-col -space-y-1">
+              <h1 className="text-2xl font-black bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent tracking-tight">
+                GarFlex
+              </h1>
+              <span className="text-[10px] font-semibold text-base-content/50 tracking-[0.2em] uppercase pl-0.5">
+                Garments Tracker
+              </span>
+            </div>
+          </Link>
 
-          {/* Brand Text */}
-          <div className="flex flex-col -space-y-1">
-            <h1 className="text-2xl font-black bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent tracking-tight">
-              GarFlex
-            </h1>
-            <span className="text-[10px] font-semibold text-base-content/50 tracking-[0.2em] uppercase pl-0.5">
-              Garments Tracker
-            </span>
-          </div>
-        </Link>
+          {/* Desktop Navigation */}
+          <ul className="hidden lg:flex items-center gap-3">
+            {navItems.map(({ path, label }) => (
+              <NavItem key={path} to={path}>
+                {label}
+              </NavItem>
+            ))}
+          </ul>
 
-        {/* Desktop Navigation */}
-        <ul className="hidden lg:flex items-center gap-3">
-          {navItems.map(({ path, label }) => (
-            <NavItem key={path} to={path}>
-              {label}
-            </NavItem>
-          ))}
-        </ul>
+          {/* Right Side - Desktop */}
+          <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggleButton />
 
-        {/* Right Side - Desktop */}
-        <div className="hidden lg:flex items-center gap-3">
-          <ThemeToggleButton />
-
-          {user ? (
-            <>
-              {/* User Info Card */}
-              <div className="flex items-center gap-3 px-4 py-2 bg-linear-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
-                {/* Avatar with Status */}
-                <div className="relative">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
-                    <img
-                      referrerPolicy="no-referrer"
-                      src={user?.photoURL}
-                      className="w-full h-full object-cover"
-                      alt={user?.displayName}
-                    />
+            {user ? (
+              <>
+                {/* User Info Card */}
+                <div className="flex items-center gap-3 px-4 py-2 bg-linear-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
+                  {/* Avatar with Status */}
+                  <div className="relative">
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
+                      <img
+                        referrerPolicy="no-referrer"
+                        src={user?.photoURL}
+                        className="w-full h-full object-cover"
+                        alt={user?.displayName}
+                      />
+                    </div>
+                    {/* Active Status Dot - Prominent */}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50 ring-1 ring-success/30"></span>
                   </div>
-                  {/* Active Status Dot - Prominent */}
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50 ring-1 ring-success/30"></span>
+
+                  {/* User Details */}
+                  <div className="flex flex-col">
+                    <p className="text-sm font-semibold text-base-content">
+                      {user?.displayName}
+                    </p>
+                    <p className="text-xs font-medium text-primary">Role</p>
+                  </div>
                 </div>
 
-                {/* User Details */}
-                <div className="flex flex-col">
-                  <p className="text-sm font-semibold text-base-content">
-                    {user?.displayName}
-                  </p>
-                  <p className="text-xs font-medium text-primary">Role</p>
+                {/* Logout Button */}
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/80 hover:text-error border border-base-300 hover:border-error/50 rounded-lg transition-all duration-300 hover:bg-error/5 group cursor-pointer"
+                >
+                  <MdLogout className="text-lg group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/auth/login"
+                  className="px-5 py-2 text-sm font-medium text-base-content/80 hover:text-primary border border-base-300 hover:border-primary/50 rounded-lg transition-all duration-300 hover:bg-primary/5"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/auth/register"
+                  className="px-5 py-2 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden flex items-center gap-2">
+            {/* Mobile Avatar (Only show when logged in) */}
+            {user && (
+              <div className="relative">
+                <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
+                  <img
+                    referrerPolicy="no-referrer"
+                    src={user?.photoURL}
+                    className="w-full h-full object-cover"
+                    alt={user?.displayName}
+                  />
                 </div>
+                {/* Active Status Dot - Mobile */}
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50"></span>
               </div>
+            )}
 
-              {/* Logout Button */}
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/80 hover:text-error border border-base-300 hover:border-error/50 rounded-lg transition-all duration-300 hover:bg-error/5 group cursor-pointer"
-              >
-                <MdLogout className="text-lg group-hover:translate-x-0.5 transition-transform duration-300" />
-                <span>Logout</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/auth/login"
-                className="px-5 py-2 text-sm font-medium text-base-content/80 hover:text-primary border border-base-300 hover:border-primary/50 rounded-lg transition-all duration-300 hover:bg-primary/5"
-              >
-                Login
-              </Link>
-              <Link
-                to="/auth/register"
-                className="px-5 py-2 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
-              >
-                Get Started
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden flex items-center gap-2">
-          {/* Mobile Avatar (Only show when logged in) */}
-          {user && (
-            <div className="relative">
-              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
-                <img
-                  referrerPolicy="no-referrer"
-                  src={user?.photoURL}
-                  className="w-full h-full object-cover"
-                  alt={user?.displayName}
-                />
-              </div>
-              {/* Active Status Dot - Mobile */}
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50"></span>
-            </div>
-          )}
-
-          <button
-            onClick={toggleDrawer}
-            className="w-10 h-10 flex items-center justify-center text-2xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg"
-            aria-label="Toggle Menu"
-          >
-            {isDrawerOpen ? <HiX /> : <HiMenuAlt3 />}
-          </button>
-        </div>
-      </nav>
+            <button
+              onClick={toggleDrawer}
+              className="w-10 h-10 flex items-center justify-center text-2xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg"
+              aria-label="Toggle Menu"
+            >
+              {isDrawerOpen ? <HiX /> : <HiMenuAlt3 />}
+            </button>
+          </div>
+        </nav>
+      </Container>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
@@ -321,7 +323,7 @@ const Header = () => {
           </>
         )}
       </AnimatePresence>
-    </Container>
+    </div>
   );
 };
 
