@@ -4,6 +4,7 @@ import HowItWorks from '../../components/home/HowItWorks/HowItWorks';
 import CustomerFeedback from '../../components/home/CustomerFeedback/CustomerFeedback';
 import KeyAdvantages from '../../components/home/KeyAdvantages/KeyAdvantages';
 import PricingAndPlans from '../../components/home/PricingAndPlans/PricingAndPlans';
+import OurProducts from '../../components/home/OurProducts/OurProducts';
 
 const Home = () => {
   return (
@@ -13,6 +14,11 @@ const Home = () => {
       {/* Hero Section */}
       <section>
         <HeroBanner />
+      </section>
+
+      {/* OurProducts Section */}
+      <section>
+        <OurProducts />
       </section>
 
       {/* HowItWorks Section */}
