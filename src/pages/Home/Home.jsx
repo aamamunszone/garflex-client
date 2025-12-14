@@ -1,5 +1,6 @@
 import React from 'react';
 import HeroBanner from '../../components/home/HeroBanner/HeroBanner';
+import HowItWorks from '../../components/home/HowItWorks/HowItWorks';
 
 const Home = () => {
   return (
@@ -9,6 +10,11 @@ const Home = () => {
       {/* Hero Section */}
       <section>
         <HeroBanner />
+      </section>
+
+      {/* HowItWorks Section */}
+      <section>
+        <HowItWorks />
       </section>
     </div>
   );
