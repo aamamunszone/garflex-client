@@ -234,8 +234,8 @@ const Register = () => {
                     hasLowercase: (value) =>
                       /[a-z]/.test(value) ||
                       'Must include at least one lowercase letter.',
-                    hasNumber: (value) =>
-                      /\d/.test(value) || 'Must include at least one number.',
+                    // hasNumber: (value) =>
+                    //   /\d/.test(value) || 'Must include at least one number.',
                     hasSpecial: (value) =>
                       /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
                       'Must include at least one special character.',

@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import Container from '../../common/Container/Container';
 import { Link } from 'react-router';
-import Logo from '../../../assets/images/logo.png';
+import { motion, AnimatePresence } from 'motion/react';
+import { HiMenuAlt3, HiX } from 'react-icons/hi';
+import { MdLogout } from 'react-icons/md';
+import Container from '../../common/Container/Container';
 import NavItem from './NavItem/NavItem';
 import ThemeToggleButton from '../../ui/ThemeToggleButton/ThemeToggleButton';
 import useAuth from '../../../hooks/useAuth';
 import Loader from '../../common/Loader/Loader';
 import toast from 'react-hot-toast';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
-import { AnimatePresence, motion } from 'motion/react';
-import { HiMenu, HiX } from 'react-icons/hi';
-import { MdLogout } from 'react-icons/md';
 
 const Header = () => {
   const { user, signOutUser, loading } = useAuth();
@@ -20,6 +19,17 @@ const Header = () => {
     return <Loader />;
   }
 
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      toast.success('Successfully logged out! 👋');
+      setIsDrawerOpen(false);
+    } catch (error) {
+      const errorMessage = firebaseErrorMessage(error.code);
+      toast.error(errorMessage);
+    }
+  };
+
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -28,19 +38,6 @@ const Header = () => {
     setIsDrawerOpen(false);
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOutUser();
-      setIsDrawerOpen(false);
-      toast.success('Successfully logged out! 👋');
-    } catch (error) {
-      const errorMessage = firebaseErrorMessage(error.code);
-      // console.log(errorMessage);
-      toast.error(errorMessage);
-    }
-  };
-
-  // Navigation items based on authentication
   const publicNavItems = [
     { path: '/', label: 'Home' },
     { path: '/all-products', label: 'All Products' },
@@ -59,114 +56,137 @@ const Header = () => {
   const navItems = user ? privateNavItems : publicNavItems;
 
   return (
-    <>
-      <Container>
-        <nav className="flex items-center justify-between h-16 lg:h-20">
-          {/* Left Side - Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 p-1.5 rounded-full overflow-hidden bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
-                <div className="w-full h-full bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm lg:text-base">
-                  GF
-                </div>
+    <Container className="bg-base-100/80 backdrop-blur-sm rounded-xl px-8 py-5 shadow-sm">
+      <nav className="flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-3 group">
+          {/* Transparent linear Logo Design */}
+          <div className="relative w-12 h-12">
+            {/* Animated Glow Effect */}
+            <div className="absolute inset-0 bg-linear-to-br from-primary via-secondary to-accent rounded-2xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500"></div>
+
+            {/* Main Logo Container */}
+            <div className="relative w-full h-full bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-primary/10 group-hover:border-primary/30 transition-all duration-500 shadow-lg">
+              {/* G Letter with Modern Typography */}
+              <div className="relative flex items-center justify-center">
+                <span className="text-3xl font-black bg-linear-to-br from-primary via-secondary to-accent bg-clip-text text-transparent drop-shadow-sm">
+                  G
+                </span>
+                {/* Flex Indicator Dot */}
+                <span className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-linear-to-br from-accent to-secondary rounded-full shadow-lg shadow-accent/50 animate-pulse"></span>
               </div>
-              <h1 className="text-xl lg:text-2xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-                GarFlex
-              </h1>
-            </Link>
+            </div>
+
+            {/* Corner Accent Lines */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/40 rounded-tl-lg"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-secondary/40 rounded-br-lg"></div>
           </div>
 
-          {/* Middle Side - Desktop Navigation */}
-          <div className="hidden lg:block">
-            <ul className="flex items-center gap-1">
-              {navItems.map(({ path, label }) => (
-                <NavItem key={path} to={path}>
-                  {label}
-                </NavItem>
-              ))}
-            </ul>
+          {/* Brand Text */}
+          <div className="flex flex-col -space-y-1">
+            <h1 className="text-2xl font-black bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent tracking-tight">
+              GarFlex
+            </h1>
+            <span className="text-[10px] font-semibold text-base-content/50 tracking-[0.2em] uppercase pl-0.5">
+              Garments Tracker
+            </span>
           </div>
+        </Link>
 
-          {/* Right Side - CTA Buttons */}
-          <div className="flex items-center gap-3">
-            <ThemeToggleButton />
+        {/* Desktop Navigation */}
+        <ul className="hidden lg:flex items-center gap-3">
+          {navItems.map(({ path, label }) => (
+            <NavItem key={path} to={path}>
+              {label}
+            </NavItem>
+          ))}
+        </ul>
 
-            {user ? (
-              <div className="hidden lg:flex items-center gap-3">
-                <div className="dropdown dropdown-end">
-                  <div
-                    tabIndex={0}
-                    role="button"
-                    className="btn btn-ghost btn-circle avatar ring-2 ring-primary ring-offset-2 ring-offset-base-100"
-                  >
-                    <div className="w-10 rounded-full">
-                      <img
-                        referrerPolicy="no-referrer"
-                        src={
-                          user?.photoURL || 'https://via.placeholder.com/150'
-                        }
-                        alt={user?.displayName || 'User'}
-                      />
-                    </div>
+        {/* Right Side - Desktop */}
+        <div className="hidden lg:flex items-center gap-3">
+          <ThemeToggleButton />
+
+          {user ? (
+            <>
+              {/* User Info Card */}
+              <div className="flex items-center gap-3 px-4 py-2 bg-linear-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
+                {/* Avatar with Status */}
+                <div className="relative">
+                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
+                    <img
+                      referrerPolicy="no-referrer"
+                      src={user?.photoURL}
+                      className="w-full h-full object-cover"
+                      alt={user?.displayName}
+                    />
                   </div>
-                  <ul
-                    tabIndex={0}
-                    className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300"
-                  >
-                    <li className="menu-title">
-                      <span className="text-sm font-semibold">
-                        {user?.displayName || 'User'}
-                      </span>
-                    </li>
-                    <li>
-                      <Link to="/dashboard/profile" className="justify-between">
-                        Profile
-                        <span className="badge badge-primary badge-sm">
-                          New
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/dashboard">Dashboard</Link>
-                    </li>
-                    <div className="divider my-0"></div>
-                    <li>
-                      <button onClick={handleSignOut} className="text-error">
-                        <MdLogout className="text-lg" />
-                        Logout
-                      </button>
-                    </li>
-                  </ul>
+                  {/* Active Status Dot - Prominent */}
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50 ring-1 ring-success/30"></span>
+                </div>
+
+                {/* User Details */}
+                <div className="flex flex-col">
+                  <p className="text-sm font-semibold text-base-content">
+                    {user?.displayName}
+                  </p>
+                  <p className="text-xs font-medium text-primary">Role</p>
                 </div>
               </div>
-            ) : (
-              <div className="hidden lg:flex items-center gap-3">
-                <Link
-                  to="/auth/login"
-                  className="btn btn-ghost btn-sm font-medium"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/auth/register"
-                  className="btn btn-primary btn-sm text-white"
-                >
-                  Get Started
-                </Link>
-              </div>
-            )}
 
-            {/* Mobile Menu Toggle Button */}
-            <button
-              onClick={toggleDrawer}
-              className="lg:hidden btn btn-ghost btn-circle text-2xl"
-              aria-label="Toggle Menu"
-            >
-              {isDrawerOpen ? <HiX /> : <HiMenu />}
-            </button>
-          </div>
-        </nav>
-      </Container>
+              {/* Logout Button */}
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/80 hover:text-error border border-base-300 hover:border-error/50 rounded-lg transition-all duration-300 hover:bg-error/5 group cursor-pointer"
+              >
+                <MdLogout className="text-lg group-hover:translate-x-0.5 transition-transform duration-300" />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/auth/login"
+                className="px-5 py-2 text-sm font-medium text-base-content/80 hover:text-primary border border-base-300 hover:border-primary/50 rounded-lg transition-all duration-300 hover:bg-primary/5"
+              >
+                Login
+              </Link>
+              <Link
+                to="/auth/register"
+                className="px-5 py-2 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden flex items-center gap-2">
+          {/* Mobile Avatar (Only show when logged in) */}
+          {user && (
+            <div className="relative">
+              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
+                <img
+                  referrerPolicy="no-referrer"
+                  src={user?.photoURL}
+                  className="w-full h-full object-cover"
+                  alt={user?.displayName}
+                />
+              </div>
+              {/* Active Status Dot - Mobile */}
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50"></span>
+            </div>
+          )}
+
+          <button
+            onClick={toggleDrawer}
+            className="w-10 h-10 flex items-center justify-center text-2xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg"
+            aria-label="Toggle Menu"
+          >
+            {isDrawerOpen ? <HiX /> : <HiMenuAlt3 />}
+          </button>
+        </div>
+      </nav>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
@@ -178,7 +198,7 @@ const Header = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
               onClick={closeDrawer}
             />
 
@@ -188,53 +208,59 @@ const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-80 bg-base-100 shadow-2xl z-50 lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 w-80 h-screen bg-base-100 shadow-2xl z-50 lg:hidden flex flex-col"
             >
               {/* Drawer Header */}
               <div className="flex items-center justify-between p-6 border-b border-base-300">
                 <Link
                   to="/"
                   onClick={closeDrawer}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-3"
                 >
-                  <div className="w-10 h-10 p-1.5 rounded-full overflow-hidden bg-primary/10">
-                    <div className="w-full h-full bg-primary rounded-full flex items-center justify-center text-white font-bold">
-                      GF
+                  {/* Mobile Logo */}
+                  <div className="relative w-10 h-10">
+                    <div className="absolute inset-0 bg-linear-to-br from-primary via-secondary to-accent rounded-xl opacity-10 blur-sm"></div>
+                    <div className="relative w-full h-full bg-linear-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-xl flex items-center justify-center border border-primary/10 shadow-md">
+                      <span className="text-2xl font-black bg-linear-to-br from-primary via-secondary to-accent bg-clip-text text-transparent">
+                        G
+                      </span>
+                      <span className="absolute -top-0.5 -right-1 w-2 h-2 bg-linear-to-br from-accent to-secondary rounded-full shadow-lg shadow-accent/50 animate-pulse"></span>
                     </div>
                   </div>
-                  <h1 className="text-xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  <h1 className="text-lg font-black bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                     GarFlex
                   </h1>
                 </Link>
                 <button
                   onClick={closeDrawer}
-                  className="btn btn-ghost btn-circle text-2xl"
-                  aria-label="Close Menu"
+                  className="w-9 h-9 flex items-center justify-center text-xl text-base-content hover:text-error transition-colors duration-300 hover:bg-error/10 rounded-lg"
                 >
                   <HiX />
                 </button>
               </div>
 
-              {/* User Profile Section (Mobile) */}
+              {/* User Info Section */}
               {user && (
-                <div className="p-6 bg-base-200 border-b border-base-300">
-                  <div className="flex items-center gap-4">
-                    <div className="avatar">
-                      <div className="w-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-200">
+                <div className="p-6 border-b border-base-300 bg-linear-to-br from-primary/5 to-secondary/5">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10 shadow-md">
                         <img
                           referrerPolicy="no-referrer"
-                          src={
-                            user?.photoURL || 'https://via.placeholder.com/150'
-                          }
-                          alt={user?.displayName || 'User'}
+                          src={user?.photoURL}
+                          className="w-full h-full object-cover"
+                          alt={user?.displayName}
                         />
                       </div>
+                      {/* Active Status - Mobile Drawer */}
+                      <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50 ring-2 ring-success/30"></span>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {user?.displayName || 'User'}
-                      </h3>
-                      <p className="text-sm text-base-content/60">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-base-content truncate">
+                        {user?.displayName}
+                      </p>
+                      <p className="text-sm font-medium text-primary">Role</p>
+                      <p className="text-xs text-base-content/60 truncate">
                         {user?.email}
                       </p>
                     </div>
@@ -243,69 +269,59 @@ const Header = () => {
               )}
 
               {/* Navigation Links */}
-              <div className="p-6">
-                <ul className="menu menu-lg gap-2">
+              <nav className="flex-1 overflow-y-auto p-6">
+                <ul className="space-y-2">
                   {navItems.map(({ path, label }) => (
-                    <NavItem
-                      key={path}
-                      to={path}
-                      onClick={closeDrawer}
-                      className="w-full"
-                    >
-                      {label}
-                    </NavItem>
+                    <li key={path} onClick={closeDrawer}>
+                      <NavItem to={path} className="w-full text-left block">
+                        {label}
+                      </NavItem>
+                    </li>
                   ))}
                 </ul>
-              </div>
+              </nav>
 
-              {/* Auth Buttons (Mobile) */}
-              <div className="p-6 border-t border-base-300">
+              {/* Drawer Footer */}
+              <div className="p-6 border-t border-base-300 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-base-content/70">
+                    Theme
+                  </span>
+                  <ThemeToggleButton />
+                </div>
+
                 {user ? (
-                  <div className="space-y-3">
-                    <Link
-                      to="/dashboard/profile"
-                      onClick={closeDrawer}
-                      className="btn btn-ghost w-full justify-start"
-                    >
-                      My Profile
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="btn btn-error btn-outline w-full"
-                    >
-                      <MdLogout className="text-xl" />
-                      Logout
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-error border border-error/30 hover:border-error hover:bg-error/10 rounded-lg transition-all duration-300"
+                  >
+                    <MdLogout className="text-lg" />
+                    <span>Logout</span>
+                  </button>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Link
                       to="/auth/login"
                       onClick={closeDrawer}
-                      className="btn btn-ghost w-full"
+                      className="w-full block text-center px-4 py-3 text-sm font-medium text-base-content/80 border border-base-300 hover:border-primary/50 hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-300"
                     >
                       Login
                     </Link>
                     <Link
                       to="/auth/register"
                       onClick={closeDrawer}
-                      className="btn btn-primary w-full text-white"
+                      className="w-full block text-center px-4 py-3 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md"
                     >
                       Get Started
                     </Link>
                   </div>
                 )}
               </div>
-
-              {/* Footer Info */}
-              <div className="p-6 text-center text-sm text-base-content/60">
-                <p>© 2025 GarFlex. All rights reserved.</p>
-              </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </>
+    </Container>
   );
 };
 
