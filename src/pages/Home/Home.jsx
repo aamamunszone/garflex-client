@@ -2,6 +2,7 @@ import React from 'react';
 import HeroBanner from '../../components/home/HeroBanner/HeroBanner';
 import HowItWorks from '../../components/home/HowItWorks/HowItWorks';
 import CustomerFeedback from '../../components/home/CustomerFeedback/CustomerFeedback';
+import KeyAdvantages from '../../components/home/KeyAdvantages/KeyAdvantages';
 
 const Home = () => {
   return (
@@ -21,6 +22,11 @@ const Home = () => {
       {/* CustomerFeedback Section */}
       <section>
         <CustomerFeedback />
+      </section>
+
+      {/* KeyAdvantages Section */}
+      <section>
+        <KeyAdvantages />
       </section>
     </div>
   );
