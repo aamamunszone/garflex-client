@@ -10,12 +10,14 @@ import useAuth from '../../../hooks/useAuth';
 import Loader from '../../common/Loader/Loader';
 import toast from 'react-hot-toast';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
+import useRole from '../../../hooks/useRole';
 
 const Header = () => {
   const { user, signOutUser, loading } = useAuth();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { role, roleLoading } = useRole();
 
-  if (loading) {
+  if (loading || roleLoading) {
     return <Loader />;
   }
 
@@ -57,7 +59,7 @@ const Header = () => {
 
   return (
     <div className="w-full">
-      <Container className="bg-base-100/80 backdrop-blur-sm rounded-xl px-8 py-5 shadow-sm">
+      <Container className="bg-base-100/80 backdrop-blur-sm rounded-b-xl md:rounded-xl px-8 py-5 shadow-sm">
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
@@ -130,9 +132,7 @@ const Header = () => {
                     <p className="text-sm font-semibold text-base-content">
                       {user?.displayName}
                     </p>
-                    <p className="text-xs font-medium text-primary">
-                      {user?.role}
-                    </p>
+                    <p className="text-xs font-medium text-primary">{role}</p>
                   </div>
                 </div>
 
@@ -263,9 +263,7 @@ const Header = () => {
                       <p className="font-semibold text-base-content truncate">
                         {user?.displayName}
                       </p>
-                      <p className="text-sm font-medium text-primary">
-                        {user?.role}
-                      </p>
+                      <p className="text-sm font-medium text-primary">{role}</p>
                       <p className="text-xs text-base-content/60 truncate">
                         {user?.email}
                       </p>
