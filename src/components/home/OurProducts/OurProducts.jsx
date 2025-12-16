@@ -5,10 +5,10 @@ import toast from 'react-hot-toast';
 import ProductCard from '../../products/ProductCard/ProductCard';
 import Loader from '../../common/Loader/Loader';
 import Container from '../../common/Container/Container';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useAxios from '../../../hooks/useAxios';
 
 const OurProducts = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const OurProducts = () => {
   useEffect(() => {
     const fetchRecentProducts = async () => {
       try {
-        const response = await axiosSecure.get('/products/recent');
+        const response = await axiosPublic.get('/products/recent');
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -27,7 +27,7 @@ const OurProducts = () => {
     };
 
     fetchRecentProducts();
-  }, [axiosSecure]);
+  }, [axiosPublic]);
 
   if (loading) {
     return <Loader />;

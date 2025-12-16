@@ -5,7 +5,6 @@ import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
 import { useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
-import WithDotLoaderButton from '../WithDotLoaderButton/WithDotLoaderButton';
 
 const GoogleAuthButton = () => {
   const { googleSignIn } = useAuth();
@@ -29,8 +28,8 @@ const GoogleAuthButton = () => {
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL || null,
-        role: 'buyer',
-        status: 'pending',
+        role: 'Buyer',
+        status: 'Pending',
         createdAt: new Date(),
         updatedAt: new Date(),
         lastLoginAt: new Date(),
@@ -78,7 +77,7 @@ const GoogleAuthButton = () => {
         <FcGoogle size={22} />
         {isSubmitting ? (
           <span className="font-medium">
-            <WithDotLoaderButton>Continue with Google</WithDotLoaderButton>
+            <span className="skeleton skeleton-text">Loading...</span>
           </span>
         ) : (
           <span className="font-medium">Continue with Google</span>

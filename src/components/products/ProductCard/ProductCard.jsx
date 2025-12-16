@@ -86,7 +86,7 @@ const ProductCard = ({ product }) => {
           </Link>
 
           {/* Short Description */}
-          <p className="text-sm text-base-content/70 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-base-content/70 line-clamp-1 leading-relaxed">
             {shortDescription}
           </p>
 
@@ -102,7 +102,7 @@ const ProductCard = ({ product }) => {
               </span>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-black bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                  ৳{price}
+                  ৳ {price}
                 </span>
                 <span className="text-xs text-base-content/50">/piece</span>
               </div>

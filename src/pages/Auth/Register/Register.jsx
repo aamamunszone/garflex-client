@@ -10,7 +10,6 @@ import toast from 'react-hot-toast';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { firebaseErrorMessage } from '../../../utils/firebaseErrors';
 import GoogleAuthButton from '../../../components/ui/GoogleAuthButton/GoogleAuthButton';
-import WithDotLoaderButton from '../../../components/ui/WithDotLoaderButton/WithDotLoaderButton';
 
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
@@ -32,6 +31,7 @@ const Register = () => {
     const userPassword = data.password;
     const userImage = data.image[0];
     const userRole = data.role;
+    const userStatus = 'Pending';
 
     try {
       const userCredential = await createUser(userEmail, userPassword);
@@ -52,24 +52,24 @@ const Register = () => {
         photoURL: imageURL,
       });
 
-      const userInfo = {
+      const userData = {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL || null,
         role: userRole,
-        status: 'pending',
+        status: userStatus,
         createdAt: new Date(),
         updatedAt: new Date(),
         lastLoginAt: new Date(),
       };
 
-      const response = await axiosSecure.post('/users/register', userInfo);
+      const response = await axiosSecure.post('/users/register', userData);
 
       if (response.data.success) {
         toast.success(
           `Congratulations ${
-            user?.displayName || 'User'
+            user?.displayName || 'GarFlex User'
           }. 🎉 Registration successful!`
         );
 
@@ -181,7 +181,7 @@ const Register = () => {
                 </label>
                 <select
                   defaultValue=""
-                  className="select select-bordered w-full focus:border-primary focus:outline-none transition-all duration-300"
+                  className="select select-bordered w-full focus:border-primary focus:outline-none transition-all duration-300 cursor-pointer"
                   {...register('role', {
                     required: {
                       value: true,
@@ -192,8 +192,8 @@ const Register = () => {
                   <option value="" disabled>
                     Choose your role
                   </option>
-                  <option value="buyer">Buyer</option>
-                  <option value="manager">Manager</option>
+                  <option value="Buyer">Buyer</option>
+                  <option value="Manager">Manager</option>
                 </select>
                 {errors.role && (
                   <p className="text-xs text-error flex items-center gap-1 mt-1">
@@ -262,7 +262,7 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-primary transition-colors duration-300 z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-primary transition-colors duration-300 z-10 cursor-pointer"
                   >
                     {showPassword ? (
                       <FaEyeSlash className="text-lg" />
@@ -286,7 +286,9 @@ const Register = () => {
                 className="w-full py-3 mt-2 bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-content font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <WithDotLoaderButton>Creating Account</WithDotLoaderButton>
+                  <span className="skeleton skeleton-text">
+                    Creating Account...
+                  </span>
                 ) : (
                   'Create Account'
                 )}
@@ -297,7 +299,7 @@ const Register = () => {
             <div className="flex items-center gap-3 py-1">
               <div className="flex-1 h-px bg-base-300"></div>
               <span className="text-xs font-medium text-base-content/50 uppercase tracking-wider">
-                Or Continue With
+                OR
               </span>
               <div className="flex-1 h-px bg-base-300"></div>
             </div>

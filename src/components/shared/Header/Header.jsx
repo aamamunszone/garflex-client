@@ -130,7 +130,9 @@ const Header = () => {
                     <p className="text-sm font-semibold text-base-content">
                       {user?.displayName}
                     </p>
-                    <p className="text-xs font-medium text-primary">Role</p>
+                    <p className="text-xs font-medium text-primary">
+                      {user?.role}
+                    </p>
                   </div>
                 </div>
 
@@ -261,7 +263,9 @@ const Header = () => {
                       <p className="font-semibold text-base-content truncate">
                         {user?.displayName}
                       </p>
-                      <p className="text-sm font-medium text-primary">Role</p>
+                      <p className="text-sm font-medium text-primary">
+                        {user?.role}
+                      </p>
                       <p className="text-xs text-base-content/60 truncate">
                         {user?.email}
                       </p>

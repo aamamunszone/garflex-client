@@ -8,7 +8,6 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdLogin } from 'react-icons/md';
 import { motion } from 'motion/react';
 import GoogleAuthButton from '../../../components/ui/GoogleAuthButton/GoogleAuthButton';
-import WithDotLoaderButton from '../../../components/ui/WithDotLoaderButton/WithDotLoaderButton';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const Login = () => {
@@ -221,7 +220,7 @@ const Login = () => {
                 className="w-full py-3 mt-2 bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-content font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <WithDotLoaderButton>Logging In</WithDotLoaderButton>
+                  <span className="skeleton skeleton-text">Logging In...</span>
                 ) : (
                   'Login'
                 )}
@@ -232,7 +231,7 @@ const Login = () => {
             <div className="flex items-center gap-3 py-2">
               <div className="flex-1 h-px bg-base-300"></div>
               <span className="text-xs font-medium text-base-content/50 uppercase tracking-wider">
-                Or Continue With
+                OR
               </span>
               <div className="flex-1 h-px bg-base-300"></div>
             </div>

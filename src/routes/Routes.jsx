@@ -8,6 +8,9 @@ import Unauthorized from '../pages/Errors/Unauthorized/Unauthorized';
 import NotFound from '../pages/Errors/NotFound/NotFound';
 import ServerCrash from '../pages/Errors/ServerCrash/ServerCrash';
 import AllProducts from '../pages/Products/AllProducts/AllProducts';
+import PrivateRoute from './PrivateRoute';
+import ProductDetails from '../pages/Products/ProductDetails/ProductDetails';
+import BookingProduct from '../pages/Products/BookingProduct/BookingProduct';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -19,6 +22,22 @@ export const router = createBrowserRouter([
       { path: 'auth/register', Component: Register },
       { path: 'auth/login', Component: Login },
       { path: 'all-products', Component: AllProducts },
+      {
+        path: 'product-details/:id',
+        element: (
+          <PrivateRoute>
+            <ProductDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'booking/:id',
+        element: (
+          <PrivateRoute>
+            <BookingProduct />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 
