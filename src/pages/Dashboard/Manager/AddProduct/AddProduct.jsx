@@ -227,7 +227,7 @@ const AddProduct = () => {
                     </span>
                   </label>
                   <div className="relative">
-                    <MdCategory className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40 text-lg z-50" />
+                    <MdCategory className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40 text-lg z-40" />
                     <select
                       {...register('category', {
                         required: 'Category is required',

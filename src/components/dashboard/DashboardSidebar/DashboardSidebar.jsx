@@ -113,7 +113,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           display: isSidebarOpen ? 'flex' : 'none',
         }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className={`fixed lg:sticky top-0 left-0 h-screen w-80 bg-base-100 border-r border-base-300 shadow-xl z-40 flex-col shrink-0`}
+        className={`fixed lg:sticky top-0 left-0 h-screen w-80 bg-base-100 border-r border-base-300 shadow-xl z-50 flex-col shrink-0`}
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-8 shadow-sm border-b border-base-300">
