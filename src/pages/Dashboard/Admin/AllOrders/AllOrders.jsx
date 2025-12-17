@@ -9,6 +9,8 @@ import {
   MdCheckCircleOutline,
   MdHighlightOff,
   MdHistory,
+  MdPendingActions,
+  MdAttachMoney,
 } from 'react-icons/md';
 import { FiPackage, FiUser, FiClock } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -28,7 +30,11 @@ const AllOrders = () => {
   const [statusFilter, setStatusFilter] = useState('All');
 
   // Fetch All Orders
-  const { data: orders = [], isLoading } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['admin-all-orders'],
     queryFn: async () => {
       try {
@@ -41,6 +47,48 @@ const AllOrders = () => {
       }
     },
   });
+
+  // Stats Calculation
+  const stats = useMemo(() => {
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(
+      (o) => o.orderStatus === 'Pending'
+    ).length;
+    const deliveredOrders = orders.filter(
+      (o) => o.orderStatus === 'Delivered'
+    ).length;
+    const totalRevenue = orders.reduce(
+      (sum, o) => sum + (o.orderPrice || 0),
+      0
+    );
+
+    return [
+      {
+        label: 'Total Orders',
+        val: totalOrders,
+        icon: FiPackage,
+        color: 'secondary',
+      },
+      {
+        label: 'Pending Orders',
+        val: pendingOrders,
+        icon: MdPendingActions,
+        color: 'warning',
+      },
+      {
+        label: 'Completed',
+        val: deliveredOrders,
+        icon: MdCheckCircleOutline,
+        color: 'success',
+      },
+      {
+        label: 'Total Revenue',
+        val: `৳${totalRevenue.toLocaleString()}`,
+        icon: MdAttachMoney,
+        color: 'primary',
+      },
+    ];
+  }, [orders]);
 
   // Update Order Status Mutation
   const updateStatusMutation = useMutation({
@@ -106,8 +154,55 @@ const AllOrders = () => {
                 </p>
               </div>
             </div>
+            <button
+              onClick={() => refetch()}
+              className="btn btn-outline btn-primary rounded-xl"
+            >
+              Refresh Data
+            </button>
           </div>
         </motion.div>
+
+        {/* Stats Cards Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {stats.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm hover:shadow-md transition-all group"
+            >
+              <div
+                className={`p-3 rounded-xl w-fit mb-3 group-hover:scale-110 transition-transform ${
+                  item.color === 'warning'
+                    ? 'bg-warning/10'
+                    : item.color === 'success'
+                    ? 'bg-success/10'
+                    : item.color === 'primary'
+                    ? 'bg-primary/10'
+                    : 'bg-blue-500/10'
+                }`}
+              >
+                <item.icon
+                  className={`text-2xl ${
+                    item.color === 'warning'
+                      ? 'text-warning'
+                      : item.color === 'success'
+                      ? 'text-success'
+                      : item.color === 'primary'
+                      ? 'text-primary'
+                      : 'text-blue-500'
+                  }`}
+                />
+              </div>
+              <div className="text-2xl font-black">{item.val}</div>
+              <div className="text-[10px] font-bold opacity-50 uppercase tracking-widest mt-1">
+                {item.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
         {/* Search and Filters */}
         <div className="bg-base-100 rounded-3xl p-5 mb-8 shadow-sm border border-base-300 flex flex-col lg:flex-row gap-4 justify-between">

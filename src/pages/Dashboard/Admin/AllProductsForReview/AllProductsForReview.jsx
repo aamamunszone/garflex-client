@@ -35,7 +35,11 @@ const AllProductsForReview = () => {
   const [uploading, setUploading] = useState(false);
 
   // Fetch Products
-  const { data: products = [], isLoading } = useQuery({
+  const {
+    data: products = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['admin-all-products'],
     queryFn: async () => {
       const res = await axiosSecure.get('/admin/all-products');
@@ -85,6 +89,32 @@ const AllProductsForReview = () => {
       return matchesSearch && matchesCat && matchesHome;
     });
   }, [products, searchQuery, categoryFilter, homeFilter]);
+
+  // Logic: Calculate Stats
+  const stats = useMemo(() => {
+    const defaultStats = {
+      total: 0,
+      onHome: 0,
+      hidden: 0,
+      totalValue: 0,
+      categories: 0,
+    };
+    if (!Array.isArray(products)) return defaultStats;
+
+    const uniqueCategories = new Set();
+
+    const result = products.reduce((acc, p) => {
+      acc.total++;
+      if (p.showOnHomePage) acc.onHome++;
+      else acc.hidden++;
+      acc.totalValue += p.price || 0;
+      if (p.category) uniqueCategories.add(p.category);
+      return acc;
+    }, defaultStats);
+
+    result.categories = uniqueCategories.size;
+    return result;
+  }, [products]);
 
   // Handlers
   const handleImageUpload = async (e) => {
@@ -207,8 +237,68 @@ const AllProductsForReview = () => {
                 </p>
               </div>
             </div>
+            <button
+              onClick={() => refetch()}
+              className="btn btn-outline btn-primary rounded-xl"
+            >
+              Refresh Data
+            </button>
           </div>
         </motion.div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+          {[
+            {
+              label: 'Total Products',
+              val: stats.total,
+              color: 'primary',
+              icon: FiPackage,
+            },
+            {
+              label: 'On Home Page',
+              val: stats.onHome,
+              color: 'secondary',
+              icon: MdHome,
+            },
+            {
+              label: 'Hidden/Draft',
+              val: stats.hidden,
+              color: 'info',
+              icon: MdOutlineHomeWork,
+            },
+            {
+              label: 'Categories',
+              val: stats.categories,
+              color: 'error',
+              icon: FiLayers,
+            },
+            {
+              label: 'Total Value',
+              val: `৳${Math.round(stats.totalValue).toLocaleString()}`,
+              color: 'success',
+              icon: MdPayments,
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm hover:shadow-md transition-all group"
+            >
+              <div
+                className={`p-3 rounded-xl bg-${item.color}/10 w-fit mb-3 group-hover:scale-110 transition-transform`}
+              >
+                <item.icon className={`text-2xl text-${item.color}`} />
+              </div>
+              <div className="text-2xl font-black">{item.val}</div>
+              <div className="text-[10px] font-bold opacity-50 uppercase tracking-widest mt-1">
+                {item.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
         {/* Filters */}
         <div className="bg-base-100 rounded-3xl p-5 mb-8 shadow-sm border border-base-300 flex flex-col lg:flex-row gap-4 justify-between">

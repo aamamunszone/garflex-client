@@ -228,7 +228,7 @@ const ManageUsers = () => {
             {
               label: 'Buyers',
               val: stats.buyer,
-              color: 'accent',
+              color: 'info',
               icon: MdPeople,
             },
             {
@@ -240,20 +240,24 @@ const ManageUsers = () => {
             {
               label: 'Suspended',
               val: stats.suspended,
-              color: 'neutral',
+              color: 'secondary',
               icon: MdBlock,
             },
           ].map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm hover:shadow-md transition-all"
+              className="bg-base-100 p-5 rounded-2xl border border-base-300 shadow-sm hover:shadow-md transition-all group"
             >
-              <item.icon className={`text-2xl text-${item.color} mb-2`} />
-              <div className="text-3xl font-bold">{item.val}</div>
-              <div className="text-[10px] font-bold opacity-50 uppercase tracking-widest">
+              <div
+                className={`p-3 rounded-xl bg-${item.color}/10 w-fit mb-3 group-hover:scale-110 transition-transform`}
+              >
+                <item.icon className={`text-2xl text-${item.color}`} />
+              </div>
+              <div className="text-2xl font-black">{item.val}</div>
+              <div className="text-[10px] font-bold opacity-50 uppercase tracking-widest mt-1">
                 {item.label}
               </div>
             </motion.div>
