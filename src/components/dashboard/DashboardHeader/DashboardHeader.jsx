@@ -59,15 +59,9 @@ const DashboardHeader = ({ toggleSidebar, isSidebarOpen }) => {
         </div>
 
         {/* Right Side - Actions */}
-        <div className="flex items-center gap-3">
-          {/* Search Button/Bar */}
-          <button className="hidden md:flex items-center gap-2 px-4 py-2 bg-base-200 hover:bg-base-300 rounded-lg transition-colors duration-300">
-            <MdSearch className="text-lg text-base-content/70" />
-            <span className="text-sm text-base-content/70">Search...</span>
-          </button>
-
+        <div className="flex items-center gap-7">
           {/* Notifications */}
-          <button className="relative w-10 h-10 flex items-center justify-center text-xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg">
+          <button className="relative w-10 h-10 flex items-center justify-center text-xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg outline-1 outline-success cursor-pointer">
             <MdNotifications />
             <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border border-base-100"></span>
           </button>
