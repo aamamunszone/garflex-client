@@ -30,7 +30,7 @@ const DashboardLayout = () => {
 
         {/* Dashboard Main Content */}
         <motion.main
-          className="flex-1 p-4 md:p-6 lg:p-8"
+          className="flex-1"
           // Animate the content on route change
           key={location.pathname}
           initial={{ opacity: 0, y: 10 }}

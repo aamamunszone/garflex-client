@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
+import { MdPayment, MdCheckCircle } from 'react-icons/md';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import Loader from '../../../components/common/Loader/Loader';
@@ -17,6 +18,7 @@ const BookingProduct = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
 
   const {
     register,
@@ -54,6 +56,14 @@ const BookingProduct = () => {
         setValue('productTitle', productData.name);
         setValue('price', productData.price);
         setValue('orderQuantity', productData.minimumOrderQuantity);
+
+        // Set default payment method
+        if (
+          productData.paymentOptions &&
+          productData.paymentOptions.length > 0
+        ) {
+          setSelectedPaymentMethod(productData.paymentOptions[0]);
+        }
       } catch (error) {
         console.error(error);
         toast.error('Failed to load product details!');
@@ -76,6 +86,12 @@ const BookingProduct = () => {
 
   // Handle form submission
   const onSubmit = async (data) => {
+    // Validate payment method selection
+    if (!selectedPaymentMethod) {
+      toast.error('Please select a payment method!');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -91,21 +107,21 @@ const BookingProduct = () => {
         contactNumber: data.contactNumber,
         deliveryAddress: data.deliveryAddress,
         additionalNotes: data.additionalNotes,
-        paymentMethod: product.paymentOptions[0],
+        paymentMethod: selectedPaymentMethod,
+        paymentStatus:
+          selectedPaymentMethod === 'Cash on Delivery' ? 'Pending' : 'Paid',
         orderStatus: 'Pending',
         orderDate: new Date(),
       };
 
-      // Check if PayFirst is required
-      const requiresPayment = product.paymentOptions.includes('PayFirst');
-
-      if (requiresPayment) {
+      // Check if PayFirst is selected
+      if (selectedPaymentMethod === 'PayFirst') {
         // Redirect to payment page (Stripe)
         toast.success('Redirecting to payment...');
-        navigate(`/payment/${product._id}`, { state: { orderData } });
+        navigate(`/buyer/payment/${product._id}`, { state: { orderData } });
       } else {
         // Cash on Delivery - Save order directly
-        const response = await axiosSecure.post('/orders', orderData);
+        const response = await axiosSecure.post('/buyer/orders', orderData);
 
         if (response.data.success) {
           toast.success('Order placed successfully! 🎉');
@@ -114,7 +130,7 @@ const BookingProduct = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error('Failed to place order!');
+      toast.error(error.response?.data?.message || 'Failed to place order!');
     } finally {
       setIsSubmitting(false);
     }
@@ -188,6 +204,15 @@ const BookingProduct = () => {
                       <p className="text-sm text-base-content/60">Quantity</p>
                       <p className="font-semibold text-base-content">
                         {orderQuantity || product.minimumOrderQuantity} pieces
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-base-content/60">
+                        Payment Method
+                      </p>
+                      <p className="font-semibold text-primary">
+                        {selectedPaymentMethod || 'Not selected'}
                       </p>
                     </div>
 
@@ -340,6 +365,50 @@ const BookingProduct = () => {
                       />
                     </div>
 
+                    {/* Payment Method Selection */}
+                    <div>
+                      <label className="block text-sm font-semibold text-base-content mb-3">
+                        <MdPayment className="inline-block mr-2 text-lg" />
+                        Select Payment Method
+                      </label>
+                      <div className="space-y-3">
+                        {product.paymentOptions.map((option) => (
+                          <label
+                            key={option}
+                            className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
+                              selectedPaymentMethod === option
+                                ? 'border-primary bg-primary/5 shadow-md'
+                                : 'border-base-300 hover:border-primary/50 hover:bg-base-200'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="paymentMethod"
+                              value={option}
+                              checked={selectedPaymentMethod === option}
+                              onChange={(e) =>
+                                setSelectedPaymentMethod(e.target.value)
+                              }
+                              className="radio radio-primary"
+                            />
+                            <div className="flex-1">
+                              <p className="font-semibold text-base-content">
+                                {option}
+                              </p>
+                              <p className="text-xs text-base-content/60 mt-1">
+                                {option === 'Cash on Delivery'
+                                  ? 'Pay when you receive the product'
+                                  : 'Secure online payment via Stripe'}
+                              </p>
+                            </div>
+                            {selectedPaymentMethod === option && (
+                              <MdCheckCircle className="text-2xl text-primary" />
+                            )}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
                     {/* Contact Number */}
                     <div>
                       <label className="block text-sm font-semibold text-base-content mb-2">
@@ -404,7 +473,8 @@ const BookingProduct = () => {
                       className="w-full py-4 bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-content font-bold text-lg rounded-xl shadow-lg hover:shadow-2xl disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02]"
                     >
                       {isSubmitting ? (
-                        <span className="skeleton skeleton-text">
+                        <span className="flex items-center justify-center gap-2">
+                          <span className="loading loading-spinner loading-sm"></span>
                           Processing Order...
                         </span>
                       ) : (
@@ -421,4 +491,5 @@ const BookingProduct = () => {
     </>
   );
 };
+
 export default BookingProduct;

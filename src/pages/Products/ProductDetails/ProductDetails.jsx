@@ -9,12 +9,14 @@ import useAuth from '../../../hooks/useAuth';
 import Loader from '../../../components/common/Loader/Loader';
 import Container from '../../../components/common/Container/Container';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useRole from '../../../hooks/useRole';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const { role } = useRole();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +50,7 @@ const ProductDetails = () => {
     }
 
     // Check user role - Only buyers can order
-    if (user?.role === 'admin' || user?.role === 'manager') {
+    if (role === 'Admin' || role === 'Manager') {
       toast.error('Admin and Manager cannot place orders!');
       return;
     }
