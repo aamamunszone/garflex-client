@@ -27,6 +27,7 @@ import AdminRoute from './AdminRoute';
 import ManagerRoute from './ManagerRoute';
 import BuyerRoute from './BuyerRoute';
 import Services from '../pages/Services/Services';
+import AboutUs from '../pages/AboutUs/AboutUs';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -38,7 +39,8 @@ export const router = createBrowserRouter([
       { path: 'auth/register', Component: Register },
       { path: 'auth/login', Component: Login },
       { path: 'all-products', Component: AllProducts },
-      {path: 'services', Component: Services},
+      { path: 'services', Component: Services },
+      { path: 'about-us', Component: AboutUs },
       {
         path: 'product-details/:id',
         element: (
