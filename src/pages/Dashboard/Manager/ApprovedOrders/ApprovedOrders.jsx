@@ -104,13 +104,13 @@ const ApprovedOrders = () => {
         </motion.div>
 
         {/* Search Bar */}
-        <div className="bg-base-100 rounded-3xl p-5 mb-8 shadow-sm border border-base-300 flex flex-col lg:flex-row gap-4">
-          <div className="relative flex-1">
+        <div className="bg-base-100 rounded-3xl p-5 mb-8 shadow-sm border border-base-300">
+          <div className="relative w-full lg:max-w-md">
             <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-40" />
             <input
               type="text"
               placeholder="Search by Order ID or Customer..."
-              className="input input-bordered w-full pl-12 rounded-xl bg-base-200/50 border-none focus:ring-2 ring-success/20"
+              className="input input-bordered w-full pl-12 rounded-xl bg-base-200/50 border-none focus:ring-2 ring-primary/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -158,7 +158,7 @@ const ApprovedOrders = () => {
                         {order.productTitle}
                       </td>
                       <td>
-                        <span className="badge badge-sm badge-ghost font-bold">
+                        <span className="badge badge-sm badge-ghost font-bold px-3 rounded-sm">
                           {order.orderQuantity} PCS
                         </span>
                       </td>
