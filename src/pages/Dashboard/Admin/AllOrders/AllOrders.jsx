@@ -353,77 +353,15 @@ const AllOrders = () => {
 
                         {/* Action Buttons */}
                         <td className="text-center">
-                          <div className="flex justify-center items-center gap-2">
-                            <button
-                              onClick={() =>
-                                navigate(
-                                  `/dashboard/order-details/${order._id}`
-                                )
-                              }
-                              className="btn btn-square btn-ghost btn-sm text-info hover:bg-info/10"
-                              title="View Details"
-                            >
-                              <MdRemoveRedEye className="text-xl" />
-                            </button>
-
-                            <div className="dropdown dropdown-bottom dropdown-end">
-                              <label
-                                tabIndex={0}
-                                className="btn btn-square btn-ghost btn-sm text-primary cursor-pointer"
-                                title="Order Status"
-                              >
-                                <MdHistory className="text-xl" />
-                              </label>
-                              <ul
-                                tabIndex={0}
-                                className="dropdown-content z-10 menu p-2 shadow-2xl bg-base-100 rounded-xl w-40 border border-base-200"
-                              >
-                                <li className="text-xs font-bold px-4 py-2 opacity-50 uppercase">
-                                  Update Status
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() =>
-                                      handleStatusUpdate(order._id, 'Approved')
-                                    }
-                                    className="text-success"
-                                  >
-                                    <MdCheckCircleOutline /> Approve
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() =>
-                                      handleStatusUpdate(order._id, 'Shipped')
-                                    }
-                                    className="text-info"
-                                  >
-                                    <FiPackage /> Shipped
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() =>
-                                      handleStatusUpdate(order._id, 'Delivered')
-                                    }
-                                    className="text-green-600"
-                                  >
-                                    <MdCheckCircleOutline /> Delivered
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() =>
-                                      handleStatusUpdate(order._id, 'Rejected')
-                                    }
-                                    className="text-error"
-                                  >
-                                    <MdHighlightOff /> Reject
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
+                          <button
+                            onClick={() =>
+                              navigate(`/dashboard/order-details/${order._id}`)
+                            }
+                            className="btn btn-square btn-ghost btn-sm text-info hover:bg-info/10"
+                            title="View Details"
+                          >
+                            <MdRemoveRedEye className="text-xl" />
+                          </button>
                         </td>
                       </motion.tr>
                     );

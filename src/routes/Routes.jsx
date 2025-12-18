@@ -29,6 +29,7 @@ import BuyerRoute from './BuyerRoute';
 import Services from '../pages/Services/Services';
 import AboutUs from '../pages/AboutUs/AboutUs';
 import Contact from '../pages/Contact/Contact';
+import OrderDetails from '../pages/Dashboard/Admin/OrderDetails/OrderDetails';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -92,6 +93,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AllOrders />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'order-details/:orderId',
+        element: (
+          <AdminRoute>
+            <OrderDetails />
           </AdminRoute>
         ),
       },

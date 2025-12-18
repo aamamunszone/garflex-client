@@ -60,7 +60,7 @@ const TrackOrder = () => {
                 <p className="text-sm opacity-60 font-bold">
                   Order ID:{' '}
                   <span className="text-primary font-mono">
-                    #GF-{order?._id.slice(-12).toUpperCase()}
+                    #GF-{order?._id.slice(-16).toUpperCase()}
                   </span>
                 </p>
               </div>

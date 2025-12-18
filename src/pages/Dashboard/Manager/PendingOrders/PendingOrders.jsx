@@ -107,17 +107,17 @@ const PendingOrders = () => {
 
         {/* Search/Filters Section */}
         <div className="bg-base-100 rounded-3xl p-5 mb-8 shadow-sm border border-base-300">
-                  <div className="relative w-full lg:max-w-md">
-                    <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-40" />
-                    <input
-                      type="text"
-                      placeholder="Search by Order ID or User Name..."
-                      className="input input-bordered w-full pl-12 rounded-xl bg-base-200/50 border-none focus:ring-2 ring-primary/20"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                </div>
+          <div className="relative w-full lg:max-w-md">
+            <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-40" />
+            <input
+              type="text"
+              placeholder="Search by Order ID or User Name..."
+              className="input input-bordered w-full pl-12 rounded-xl bg-base-200/50 border-none focus:ring-2 ring-primary/20"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
 
         {/* Orders Table */}
         <div className="bg-base-100 rounded-3xl border border-base-300 shadow-xl overflow-hidden">
