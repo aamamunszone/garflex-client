@@ -12,6 +12,8 @@ const AllProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const categories = useMemo(() => {
     const uniqueCategories = [
@@ -64,6 +66,17 @@ const AllProducts = () => {
     return filtered;
   }, [products, selectedCategory, searchQuery]);
 
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
+
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
@@ -75,6 +88,40 @@ const AllProducts = () => {
   const handleResetFilters = () => {
     setSelectedCategory('All');
     setSearchQuery('');
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) pages.push(i);
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
   };
 
   const containerVariants = {
@@ -187,6 +234,11 @@ const AllProducts = () => {
                   {filteredProducts.length}
                 </span>{' '}
                 result{filteredProducts.length !== 1 ? 's' : ''} found
+                {filteredProducts.length > itemsPerPage && (
+                  <span className="ml-2 text-xs">
+                    (Page {currentPage} of {totalPages})
+                  </span>
+                )}
               </p>
               {(selectedCategory !== 'All' || searchQuery !== '') && (
                 <button
@@ -216,20 +268,102 @@ const AllProducts = () => {
 
         {/* Products Grid */}
         <Container className="py-10 bg-base-100 px-4 rounded-xl overflow-hidden">
-          {filteredProducts.length > 0 ? (
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              key={`${selectedCategory}-${searchQuery}`}
-            >
-              {filteredProducts.map((product) => (
-                <motion.div key={product.name} variants={cardVariants}>
-                  <ProductCard product={product} />
+          {currentProducts.length > 0 ? (
+            <>
+              <motion.div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                key={`${selectedCategory}-${searchQuery}-${currentPage}`}
+              >
+                {currentProducts.map((product) => (
+                  <motion.div key={product.name} variants={cardVariants}>
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <motion.div
+                  className="flex justify-center items-center gap-2 mt-12 flex-wrap"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {/* Previous Button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                      currentPage === 1
+                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg'
+                    }`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Page Numbers */}
+                  {generatePageNumbers().map((page, index) => (
+                    <button
+                      key={index}
+                      onClick={() =>
+                        typeof page === 'number' && handlePageChange(page)
+                      }
+                      disabled={page === '...'}
+                      className={`min-w-10 h-10 rounded-lg font-semibold transition-all duration-300 ${
+                        page === currentPage
+                          ? 'bg-indigo-600 text-white shadow-lg scale-110'
+                          : page === '...'
+                          ? 'bg-transparent text-gray-500 cursor-default'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-md'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  {/* Next Button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                      currentPage === totalPages
+                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg'
+                    }`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
                 </motion.div>
-              ))}
-            </motion.div>
+              )}
+            </>
           ) : (
             // No Results Found State
             <motion.div
