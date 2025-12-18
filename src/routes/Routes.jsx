@@ -28,6 +28,7 @@ import ManagerRoute from './ManagerRoute';
 import BuyerRoute from './BuyerRoute';
 import Services from '../pages/Services/Services';
 import AboutUs from '../pages/AboutUs/AboutUs';
+import Contact from '../pages/Contact/Contact';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
       { path: 'all-products', Component: AllProducts },
       { path: 'services', Component: Services },
       { path: 'about-us', Component: AboutUs },
+      { path: 'contact', Component: Contact },
       {
         path: 'product-details/:id',
         element: (
