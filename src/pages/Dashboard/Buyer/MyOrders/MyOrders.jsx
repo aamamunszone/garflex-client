@@ -5,9 +5,9 @@ import {
   MdOutlineListAlt,
   MdSearch,
   MdClose,
-  MdHistory,
   MdDeleteOutline,
   MdInfoOutline,
+  MdLocalShipping,
 } from 'react-icons/md';
 import { FiPackage, FiCreditCard } from 'react-icons/fi';
 import toast from 'react-hot-toast';
@@ -15,12 +15,15 @@ import Swal from 'sweetalert2';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import Loader from '../../../../components/common/Loader/Loader';
 import Container from '../../../../components/common/Container/Container';
+import { useNavigate } from 'react-router';
 
 const MyOrders = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const navigate = useNavigate();
 
   // Fetch Buyer's Orders
   const {
@@ -172,19 +175,34 @@ const MyOrders = () => {
                         </div>
                       </td>
                       <td>
-                        <div className="flex justify-center gap-2">
+                        <div className="flex justify-center gap-3">
+                          {/* ১. Track Order Button (Navigate to new page) */}
                           <button
-                            onClick={() => setSelectedOrder(order)}
-                            className="btn btn-square btn-ghost btn-sm text-info hover:bg-info/10 cursor-pointer"
-                            title="Order Details & Tracking"
+                            onClick={() =>
+                              navigate(`/dashboard/track-order/${order._id}`)
+                            }
+                            className="btn btn-sm btn-outline btn-info gap-2 rounded-xl normal-case hover:shadow-lg transition-all"
+                            title="Track in detail page"
                           >
-                            <MdHistory className="text-xl" />
+                            <MdLocalShipping className="text-lg" />
+                            <span>Track</span>
                           </button>
 
+                          {/* ২. Details Button (Open Modal) */}
+                          <button
+                            onClick={() => setSelectedOrder(order)}
+                            className="btn btn-sm btn-outline btn-primary gap-2 rounded-xl normal-case hover:shadow-lg transition-all"
+                            title="View quick details"
+                          >
+                            <MdInfoOutline className="text-lg" />
+                            <span>Details</span>
+                          </button>
+
+                          {/* ৩. Cancel Button (Only if Pending) */}
                           {order.orderStatus === 'Pending' && (
                             <button
                               onClick={() => handleCancel(order._id)}
-                              className="btn btn-square btn-ghost btn-sm text-error hover:bg-error/10 cursor-pointer"
+                              className="btn btn-square btn-ghost btn-sm text-error hover:bg-error/10 rounded-xl transition-colors"
                               title="Cancel Order"
                             >
                               <MdDeleteOutline className="text-xl" />
@@ -272,11 +290,18 @@ const MyOrders = () => {
                     ))
                 ) : (
                   <div className="flex flex-col items-center py-10 opacity-30 italic gap-2 text-center">
-                    <MdInfoOutline size={40} />
-                    <p>
-                      Order is currently being processed by manager. <br />{' '}
-                      Tracking info will appear soon.
-                    </p>
+                    {selectedOrder.currentStatus === 'Rejected' ||
+                    selectedOrder.orderStatus === 'Rejected' ? (
+                      <p>Thank You, See you again soon.</p>
+                    ) : (
+                      <>
+                        <MdInfoOutline size={40} />
+                        <p>
+                          Order is currently being processed by manager. <br />{' '}
+                          Tracking info will appear soon.
+                        </p>
+                      </>
+                    )}
                   </div>
                 )}
               </div>

@@ -13,7 +13,6 @@ import {
   MdPerson,
   MdLogout,
   MdHome,
-  MdOutlineLocalShipping,
 } from 'react-icons/md';
 import { FiPackage } from 'react-icons/fi';
 import useAuth from '../../../hooks/useAuth';
@@ -80,11 +79,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   const buyerMenuItems = [
     { path: '/dashboard/my-orders', label: 'My Orders', icon: FiPackage },
-    {
-      path: `/dashboard/track-order/productId`, //todo: Add Later
-      label: 'Track Order',
-      icon: MdOutlineLocalShipping,
-    },
+
     { path: '/dashboard/buyer-profile', label: 'My Profile', icon: MdPerson },
   ];
 
