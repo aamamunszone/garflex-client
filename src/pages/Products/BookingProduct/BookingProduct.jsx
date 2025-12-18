@@ -113,7 +113,7 @@ const BookingProduct = () => {
         orderStatus: 'Pending',
         orderDate: new Date(),
       };
-
+      console.log(selectedPaymentMethod);
       // Check if PayFirst is selected
       if (selectedPaymentMethod === 'PayFirst') {
         // Redirect to payment page (Stripe)

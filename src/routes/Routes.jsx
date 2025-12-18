@@ -30,6 +30,10 @@ import Services from '../pages/Services/Services';
 import AboutUs from '../pages/AboutUs/AboutUs';
 import Contact from '../pages/Contact/Contact';
 import OrderDetails from '../pages/Dashboard/Admin/OrderDetails/OrderDetails';
+import Payment from '../pages/Payment/Payment';
+import PaymentSuccess from '../components/home/Payment/PaymentSuccess/PaymentSuccess';
+import PaymentCancelled from '../components/home/Payment/PaymentCancelled/PaymentCancelled';
+import PaymentHistory from '../components/home/Payment/PaymentHistory/PaymentHistory';
 
 export const router = createBrowserRouter([
   // MainLayout Routes
@@ -165,6 +169,38 @@ export const router = createBrowserRouter([
         element: (
           <BuyerRoute>
             <BuyerProfile />
+          </BuyerRoute>
+        ),
+      },
+      {
+        path: 'payment/:parcelId',
+        element: (
+          <BuyerRoute>
+            <Payment />
+          </BuyerRoute>
+        ),
+      },
+      {
+        path: 'payment-success',
+        element: (
+          <BuyerRoute>
+            <PaymentSuccess />
+          </BuyerRoute>
+        ),
+      },
+      {
+        path: 'payment-cancelled',
+        element: (
+          <BuyerRoute>
+            <PaymentCancelled />
+          </BuyerRoute>
+        ),
+      },
+      {
+        path: 'payment-history',
+        element: (
+          <BuyerRoute>
+            <PaymentHistory />
           </BuyerRoute>
         ),
       },
