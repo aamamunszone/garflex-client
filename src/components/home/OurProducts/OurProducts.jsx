@@ -16,12 +16,27 @@ const OurProducts = () => {
   useEffect(() => {
     const fetchRecentProducts = async () => {
       try {
-        const response = await axiosPublic.get('/products/recent');
-        setProducts(response.data);
+        setLoading(true);
+        console.log('Fetching recent products from:', axiosPublic.defaults.baseURL + '/products/recent');
+        const response = await axiosPublic.get('/products/recent', {
+          timeout: 10000, // 10 second timeout
+        });
+        console.log('Recent products fetched successfully:', response.data);
+        setProducts(response.data || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching recent products:', error);
-        toast.error('Failed to load recent products!');
+        console.error('Error details:', {
+          message: error.message,
+          code: error.code,
+          status: error.response?.status,
+          url: axiosPublic.defaults.baseURL + '/products/recent'
+        });
+        // Don't show toast if it's a cancellation or network error that's not the user's fault
+        if (error.code !== 'ECONNABORTED' && error.code !== 'ERR_CANCELED') {
+          toast.error('Failed to load recent products!');
+        }
+        setProducts([]);
         setLoading(false);
       }
     };
@@ -34,7 +49,7 @@ const OurProducts = () => {
   }
 
   // Fallback if no products are found after loading
-  if (products.length === 0 && !loading) {
+  if (!loading && Array.isArray(products) && products.length === 0) {
     return (
       <Container className="py-10 rounded-xl bg-base-100 text-center">
         <h3 className="text-2xl text-base-content/70">
