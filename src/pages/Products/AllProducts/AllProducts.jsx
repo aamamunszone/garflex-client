@@ -11,6 +11,7 @@ const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState('default');
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
@@ -45,14 +46,12 @@ const AllProducts = () => {
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    // Category filter
     if (selectedCategory !== 'All') {
       filtered = filtered.filter(
         (product) => product.category === selectedCategory
       );
     }
 
-    // Search filter
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -63,19 +62,23 @@ const AllProducts = () => {
       );
     }
 
-    return filtered;
-  }, [products, selectedCategory, searchQuery]);
+    if (sortOption === 'price-low') {
+      filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    } else if (sortOption === 'price-high') {
+      filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    }
 
-  // Pagination calculations
+    return filtered;
+  }, [products, selectedCategory, searchQuery, sortOption]);
+
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, sortOption]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -88,6 +91,11 @@ const AllProducts = () => {
   const handleResetFilters = () => {
     setSelectedCategory('All');
     setSearchQuery('');
+    setSortOption('default');
+  };
+
+  const handleSortChange = (option) => {
+    setSortOption(option);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -156,7 +164,7 @@ const AllProducts = () => {
       <title>GarFlex | All Products</title>
 
       <div className="min-h-screen transition-colors duration-500 space-y-6">
-        {/* Filters Section - Floating Card */}
+        {/* Filters Section */}
         <Container className="relative z-20">
           <motion.div
             className="bg-base-100 text-base-content rounded-xl p-6 md:p-8 transition-colors duration-500 border border-base-300"
@@ -178,7 +186,6 @@ const AllProducts = () => {
                   onChange={handleSearchChange}
                   className="w-full px-6 py-3 pl-14 rounded-xl bg-base-200 border-2 border-transparent focus:border-indigo-600 focus:outline-none transition-all duration-300 text-neutral placeholder-gray-500 font-medium"
                 />
-                {/* Search Icon */}
                 <svg
                   className="w-6 h-6 absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
                   fill="none"
@@ -203,65 +210,95 @@ const AllProducts = () => {
               </div>
             </div>
 
-            {/* Category Filters */}
+            {/* Category and Sort Filters */}
             <div className="mb-6">
-              <h3 className="text-neutral font-semibold mb-4">
-                Filter by Category:
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {categories.map((category) => (
-                  <motion.button
-                    key={category}
-                    onClick={() => handleCategoryChange(category)}
-                    whileHover={{ scale: 1.03, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-md cursor-pointer ${
-                      selectedCategory === category
-                        ? 'bg-linear-to-r from-indigo-600 to-purple-600 text-white ring-4 ring-indigo-300/50 dark:ring-purple-700/50'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-600'
-                    }`}
-                  >
-                    {category}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
+              <div className="flex flex-col lg:flex-row justify-between items-start gap-6 mb-4">
+                {/* Category Filter Section */}
+                <div className="flex-1 w-full">
+                  <h3 className="text-neutral font-semibold mb-3">
+                    Filter by Category:
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {categories.map((category) => (
+                      <motion.button
+                        key={category}
+                        onClick={() => handleCategoryChange(category)}
+                        whileHover={{ scale: 1.03, y: -1 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-md cursor-pointer ${selectedCategory === category
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white ring-4 ring-indigo-300/50 dark:ring-purple-700/50'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-600'
+                          }`}
+                      >
+                        {category}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Results Count & Reset */}
-            <div className="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
-                <span className="font-extrabold text-indigo-600 dark:text-indigo-400 text-lg">
-                  {filteredProducts.length}
-                </span>{' '}
-                result{filteredProducts.length !== 1 ? 's' : ''} found
-                {filteredProducts.length > itemsPerPage && (
-                  <span className="ml-2 text-xs">
-                    (Page {currentPage} of {totalPages})
-                  </span>
-                )}
-              </p>
-              {(selectedCategory !== 'All' || searchQuery !== '') && (
-                <button
-                  onClick={handleResetFilters}
-                  className="text-sm font-medium text-red-500 hover:text-red-700 transition-colors flex items-center space-x-1"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                {/* Sort by Price Section */}
+                <div className="w-full lg:w-auto lg:min-w-[200px]">
+                  <h3 className="text-neutral font-semibold mb-3">
+                    Sort by Price:
+                  </h3>
+                  <div className="relative">
+                    <select
+                      value={sortOption}
+                      onChange={(e) => handleSortChange(e.target.value)}
+                      className={`w-full appearance-none px-5 py-2.5 pr-10 rounded-full text-sm font-semibold transition-all duration-300 shadow-md cursor-pointer focus:outline-none focus:ring-4 ${sortOption === 'default'
+                        ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-600 focus:ring-indigo-300/50'
+                        : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white ring-4 ring-indigo-300/50 dark:ring-purple-700/50'
+                        }`}
+                    >
+                      <option value="default" className="bg-base-100 text-base-content">Default</option>
+                      <option value="price-low" className="bg-base-100 text-base-content">Low to High</option>
+                      <option value="price-high" className="bg-base-100 text-base-content">High to Low</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                      <svg className={`h-4 w-4 ${sortOption === 'default' ? 'text-gray-500' : 'text-white'}`} fill="none" viewBox="0 0 20 20" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7l3-3 3 3m0 6l-3 3-3-3" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Results Count & Reset */}
+              <div className="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                  <span className="font-extrabold text-indigo-600 dark:text-indigo-400 text-lg">
+                    {filteredProducts.length}
+                  </span>{' '}
+                  result{filteredProducts.length !== 1 ? 's' : ''} found
+                  {filteredProducts.length > itemsPerPage && (
+                    <span className="ml-2 text-xs">
+                      (Page {currentPage} of {totalPages})
+                    </span>
+                  )}
+                </p>
+                {(selectedCategory !== 'All' || searchQuery !== '' || sortOption !== 'default') && (
+                  <button
+                    onClick={handleResetFilters}
+                    className="text-sm font-medium text-red-500 hover:text-red-700 transition-colors flex items-center space-x-1"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                  <span>Reset All Filters</span>
-                </button>
-              )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                    <span>Reset All Filters</span>
+                  </button>
+                )}
+              </div>
             </div>
           </motion.div>
         </Container>
@@ -271,11 +308,11 @@ const AllProducts = () => {
           {currentProducts.length > 0 ? (
             <>
               <motion.div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-10"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                key={`${selectedCategory}-${searchQuery}-${currentPage}`}
+                key={`${selectedCategory}-${searchQuery}-${sortOption}-${currentPage}`}
               >
                 {currentProducts.map((product) => (
                   <motion.div key={product.name} variants={cardVariants}>
@@ -292,15 +329,13 @@ const AllProducts = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  {/* Previous Button */}
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                      currentPage === 1
-                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg'
-                    }`}
+                    className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${currentPage === 1
+                      ? 'bg-base-200 text-base-content/40 cursor-not-allowed'
+                      : 'bg-base-200 text-base-content hover:bg-primary hover:text-primary-content shadow-sm hover:shadow-md'
+                      }`}
                   >
                     <svg
                       className="w-5 h-5"
@@ -317,7 +352,6 @@ const AllProducts = () => {
                     </svg>
                   </button>
 
-                  {/* Page Numbers */}
                   {generatePageNumbers().map((page, index) => (
                     <button
                       key={index}
@@ -325,27 +359,24 @@ const AllProducts = () => {
                         typeof page === 'number' && handlePageChange(page)
                       }
                       disabled={page === '...'}
-                      className={`min-w-10 h-10 rounded-lg font-semibold transition-all duration-300 ${
-                        page === currentPage
-                          ? 'bg-indigo-600 text-white shadow-lg scale-110'
-                          : page === '...'
-                          ? 'bg-transparent text-gray-500 cursor-default'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-md'
-                      }`}
+                      className={`flex items-center justify-center min-w-10 h-10 px-3 rounded-xl font-medium transition-all duration-300 ${page === currentPage
+                        ? 'bg-primary text-primary-content shadow-lg scale-110'
+                        : page === '...'
+                          ? 'bg-transparent text-base-content/50 cursor-default'
+                          : 'bg-base-200 text-base-content hover:bg-primary/10 hover:text-primary shadow-sm'
+                        }`}
                     >
                       {page}
                     </button>
                   ))}
 
-                  {/* Next Button */}
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                      currentPage === totalPages
-                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg'
-                    }`}
+                    className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${currentPage === totalPages
+                      ? 'bg-base-200 text-base-content/40 cursor-not-allowed'
+                      : 'bg-base-200 text-base-content hover:bg-primary hover:text-primary-content shadow-sm hover:shadow-md'
+                      }`}
                   >
                     <svg
                       className="w-5 h-5"
@@ -365,7 +396,6 @@ const AllProducts = () => {
               )}
             </>
           ) : (
-            // No Results Found State
             <motion.div
               className="text-center py-20 bg-base-100 text-base-content rounded-2xl shadow-inner dark:shadow-xl"
               initial={{ opacity: 0, scale: 0.95 }}

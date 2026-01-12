@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { motion } from 'motion/react';
+import { motion } from 'motion/react'; // eslint-disable-line no-unused-vars
 import toast from 'react-hot-toast';
 import ProductCard from '../../products/ProductCard/ProductCard';
 import Loader from '../../common/Loader/Loader';
@@ -90,8 +90,6 @@ const OurProducts = () => {
     },
   };
 
-  const headerGradient =
-    'bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent';
   const buttonGradient =
     'bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-content';
 
@@ -129,7 +127,7 @@ const OurProducts = () => {
 
       {/* Products Grid */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
