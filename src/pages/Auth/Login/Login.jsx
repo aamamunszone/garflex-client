@@ -162,7 +162,7 @@ const Login = () => {
                     },
                   })}
                   placeholder="Enter your email"
-                  className="input input-bordered w-full focus:border-primary focus:outline-none transition-all duration-300"
+                  className="w-full px-4 py-3 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300"
                 />
                 {errors.email && (
                   <p className="text-xs text-error flex items-center gap-1 mt-1">
@@ -191,7 +191,7 @@ const Login = () => {
                       },
                     })}
                     placeholder="Enter your password"
-                    className="input input-bordered w-full pr-12 focus:border-primary focus:outline-none transition-all duration-300"
+                    className="w-full px-4 py-3 pr-12 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300"
                   />
                   <button
                     type="button"

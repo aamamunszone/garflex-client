@@ -40,9 +40,8 @@ const Register = () => {
       const formData = new FormData();
       formData.append('image', userImage);
 
-      const ImgBB_API_URL = `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_IMGBB_APIKEY
-      }`;
+      const ImgBB_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_APIKEY
+        }`;
       const res = await axios.post(ImgBB_API_URL, formData);
 
       const imageURL = res.data.data.display_url;
@@ -68,8 +67,7 @@ const Register = () => {
 
       if (response.data.success) {
         toast.success(
-          `Congratulations ${
-            user?.displayName || 'GarFlex User'
+          `Congratulations ${user?.displayName || 'GarFlex User'
           }. 🎉 Registration successful!`
         );
 
@@ -128,7 +126,7 @@ const Register = () => {
                     },
                   })}
                   placeholder="Enter your full name"
-                  className="input input-bordered w-full focus:border-primary focus:outline-none transition-all duration-300"
+                  className="w-full px-4 py-3 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300"
                 />
                 {errors.name && (
                   <p className="text-xs text-error flex items-center gap-1 mt-1">
@@ -143,29 +141,35 @@ const Register = () => {
                 <label className="text-sm font-semibold text-base-content block">
                   Profile Picture
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  {...register('image', {
-                    required: {
-                      value: true,
-                      message: 'Image file is required.',
-                    },
-                    validate: {
-                      singleFile: (files) =>
-                        files?.length === 1 ||
-                        'Please upload only 1 image file.',
-                      maxSize: (files) =>
-                        files?.[0]?.size <= 2 * 1024 * 1024 ||
-                        'Image must be less than 2MB.',
-                      validType: (files) =>
-                        ['image/jpeg', 'image/png', 'image/webp'].includes(
-                          files?.[0]?.type
-                        ) || 'Only JPG, PNG or WEBP images are allowed.',
-                    },
-                  })}
-                  className="file-input file-input-bordered w-full focus:border-primary focus:outline-none transition-all duration-300"
-                />
+                <label className="block w-full cursor-pointer">
+                  <div className="w-full px-4 py-3 bg-base-100 border-2 border-dashed border-base-300 rounded-xl focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30 transition-all duration-300 min-h-12 flex items-center justify-between">
+                    <span className="text-base-content/60 truncate">Choose file or drag & drop</span>
+                    <span className="text-sm bg-primary text-primary-content px-3 py-1 rounded-lg">Browse</span>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    {...register('image', {
+                      required: {
+                        value: true,
+                        message: 'Image file is required.',
+                      },
+                      validate: {
+                        singleFile: (files) =>
+                          files?.length === 1 ||
+                          'Please upload only 1 image file.',
+                        maxSize: (files) =>
+                          files?.[0]?.size <= 2 * 1024 * 1024 ||
+                          'Image must be less than 2MB.',
+                        validType: (files) =>
+                          ['image/jpeg', 'image/png', 'image/webp'].includes(
+                            files?.[0]?.type
+                          ) || 'Only JPG, PNG or WEBP images are allowed.',
+                      },
+                    })}
+                    className="sr-only"
+                  />
+                </label>
                 {errors.image && (
                   <p className="text-xs text-error flex items-center gap-1 mt-1">
                     <span>⚠️</span>
@@ -181,7 +185,7 @@ const Register = () => {
                 </label>
                 <select
                   defaultValue=""
-                  className="select select-bordered w-full focus:border-primary focus:outline-none transition-all duration-300 cursor-pointer"
+                  className="w-full px-4 py-3 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300 cursor-pointer appearance-none relative pr-10 after:absolute after:right-3 after:top-1/2 after:-translate-y-1/2 after:w-2 after:h-2 after:border-r-2 after:border-b-2 after:border-current after:rotate-45 after:content-['']"
                   {...register('role', {
                     required: {
                       value: true,
@@ -217,7 +221,7 @@ const Register = () => {
                     },
                   })}
                   placeholder="Enter your email"
-                  className="input input-bordered w-full focus:border-primary focus:outline-none transition-all duration-300"
+                  className="w-full px-4 py-3 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300"
                 />
                 {errors.email && (
                   <p className="text-xs text-error flex items-center gap-1 mt-1">
@@ -257,7 +261,7 @@ const Register = () => {
                       },
                     })}
                     placeholder="Create a strong password"
-                    className="input input-bordered w-full pr-12 focus:border-primary focus:outline-none transition-all duration-300"
+                    className="w-full px-4 py-3 pr-12 bg-base-100 border-2 border-base-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none transition-all duration-300"
                   />
                   <button
                     type="button"
