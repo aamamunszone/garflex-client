@@ -92,6 +92,11 @@ const BookingProduct = () => {
       return;
     }
 
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -102,6 +107,7 @@ const BookingProduct = () => {
         productId: product._id,
         productTitle: data.productTitle,
         productPrice: data.price,
+        productCategory: product.category,
         orderQuantity: parseInt(data.orderQuantity),
         orderPrice: data.orderPrice,
         contactNumber: data.contactNumber,
@@ -111,17 +117,23 @@ const BookingProduct = () => {
         paymentStatus:
           selectedPaymentMethod === 'Cash on Delivery' ? 'Pending' : 'Paid',
         orderStatus: 'Pending',
-        orderDate: new Date(),
+        orderDate: new Date().toISOString(),
       };
-      console.log(selectedPaymentMethod);
+
       // Check if PayFirst is selected
       if (selectedPaymentMethod === 'PayFirst') {
-        // Redirect to payment page (Stripe)
+        // Redirect to payment page (Stripe) - DO NOT create order here
         toast.success('Redirecting to payment...');
         navigate(`/buyer/payment/${product._id}`, { state: { orderData } });
       } else {
-        // Cash on Delivery - Save order directly
-        const response = await axiosSecure.post('/buyer/orders', orderData);
+        // Cash on Delivery - Save order directly with idempotency key
+        const idempotencyKey = `cod-${user.uid}-${product._id}-${Date.now()}`;
+
+        const response = await axiosSecure.post('/buyer/orders', orderData, {
+          headers: {
+            'idempotency-key': idempotencyKey,
+          },
+        });
 
         if (response.data.success) {
           toast.success('Order placed successfully! 🎉');
@@ -129,7 +141,7 @@ const BookingProduct = () => {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error('Order submission error:', error);
       toast.error(error.response?.data?.message || 'Failed to place order!');
     } finally {
       setIsSubmitting(false);

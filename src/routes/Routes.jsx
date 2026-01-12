@@ -12,9 +12,11 @@ import PrivateRoute from './PrivateRoute';
 import ProductDetails from '../pages/Products/ProductDetails/ProductDetails';
 import BookingProduct from '../pages/Products/BookingProduct/BookingProduct';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
+import DashboardHome from '../pages/Dashboard/Home/Home';
 import ManageUsers from '../pages/Dashboard/Admin/ManageUsers/ManageUsers';
 import AllProductsForReview from '../pages/Dashboard/Admin/AllProductsForReview/AllProductsForReview';
 import AllOrders from '../pages/Dashboard/Admin/AllOrders/AllOrders';
+import AdminProfile from '../pages/Dashboard/Admin/AdminProfile/AdminProfile';
 import AddProduct from '../pages/Dashboard/Manager/AddProduct/AddProduct';
 import ManageProducts from '../pages/Dashboard/Manager/ManageProducts/ManageProducts';
 import PendingOrders from '../pages/Dashboard/Manager/PendingOrders/PendingOrders';
@@ -50,17 +52,21 @@ export const router = createBrowserRouter([
       { path: 'contact', Component: Contact },
       {
         path: 'product-details/:id',
-        element: (
-          <PrivateRoute>
-            <ProductDetails />
-          </PrivateRoute>
-        ),
+        Component: ProductDetails,
       },
       {
         path: 'booking/:id',
         element: (
           <PrivateRoute>
             <BookingProduct />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/buyer/payment/:parcelId',
+        element: (
+          <PrivateRoute>
+            <Payment />
           </PrivateRoute>
         ),
       },
@@ -76,6 +82,14 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        index: true,
+        element: (
+          <PrivateRoute>
+            <DashboardHome />
+          </PrivateRoute>
+        ),
+      },
       {
         path: 'manage-users',
         element: (
@@ -105,6 +119,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <OrderDetails />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'admin-profile',
+        element: (
+          <AdminRoute>
+            <AdminProfile />
           </AdminRoute>
         ),
       },
@@ -172,14 +194,7 @@ export const router = createBrowserRouter([
           </BuyerRoute>
         ),
       },
-      {
-        path: 'payment/:parcelId',
-        element: (
-          <BuyerRoute>
-            <Payment />
-          </BuyerRoute>
-        ),
-      },
+
       {
         path: 'payment-success',
         element: (

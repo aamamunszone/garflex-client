@@ -45,7 +45,9 @@ const ProductDetails = () => {
   const handleOrderClick = () => {
     if (!user) {
       toast.error('Please login to place an order!');
-      navigate('/auth/login', { state: { from: `/booking/${id}` } });
+      navigate('/auth/login', {
+        state: { from: { pathname: `/booking/${id}` } },
+      });
       return;
     }
 
@@ -176,10 +178,11 @@ const ProductDetails = () => {
                       setSelectedImage(index);
                       setShowVideo(false);
                     }}
-                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index && !showVideo
-                      ? 'border-primary shadow-lg scale-105'
-                      : 'border-base-300 hover:border-primary/50'
-                      }`}
+                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                      selectedImage === index && !showVideo
+                        ? 'border-primary shadow-lg scale-105'
+                        : 'border-base-300 hover:border-primary/50'
+                    }`}
                   >
                     <img
                       src={image}
@@ -193,10 +196,11 @@ const ProductDetails = () => {
                 {demoVideo && videoId && (
                   <button
                     onClick={() => setShowVideo(true)}
-                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${showVideo
-                      ? 'border-primary shadow-lg scale-105'
-                      : 'border-base-300 hover:border-primary/50'
-                      }`}
+                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${
+                      showVideo
+                        ? 'border-primary shadow-lg scale-105'
+                        : 'border-base-300 hover:border-primary/50'
+                    }`}
                   >
                     <img
                       src={`https://img.youtube.com/vi/${videoId}/default.jpg`}
