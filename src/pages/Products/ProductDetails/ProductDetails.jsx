@@ -8,13 +8,13 @@ import toast from 'react-hot-toast';
 import useAuth from '../../../hooks/useAuth';
 import Loader from '../../../components/common/Loader/Loader';
 import Container from '../../../components/common/Container/Container';
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import useRole from '../../../hooks/useRole';
+import useAxios from '../../../hooks/useAxios';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const { user } = useAuth();
   const { role } = useRole();
 
@@ -28,7 +28,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axiosSecure.get(`/products/${id}`);
+        const response = await axiosPublic.get(`/products/${id}`);
         setProduct(response.data);
       } catch (error) {
         console.error(error);
@@ -39,13 +39,13 @@ const ProductDetails = () => {
     };
 
     fetchProduct();
-  }, [id, axiosSecure]);
+  }, [id, axiosPublic]);
 
   // Handle order button click
   const handleOrderClick = () => {
     if (!user) {
       toast.error('Please login to place an order!');
-      navigate('/auth/login', { state: { from: `/product-details/${id}` } });
+      navigate('/auth/login', { state: { from: `/booking/${id}` } });
       return;
     }
 
@@ -176,11 +176,10 @@ const ProductDetails = () => {
                       setSelectedImage(index);
                       setShowVideo(false);
                     }}
-                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                      selectedImage === index && !showVideo
-                        ? 'border-primary shadow-lg scale-105'
-                        : 'border-base-300 hover:border-primary/50'
-                    }`}
+                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index && !showVideo
+                      ? 'border-primary shadow-lg scale-105'
+                      : 'border-base-300 hover:border-primary/50'
+                      }`}
                   >
                     <img
                       src={image}
@@ -194,11 +193,10 @@ const ProductDetails = () => {
                 {demoVideo && videoId && (
                   <button
                     onClick={() => setShowVideo(true)}
-                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${
-                      showVideo
-                        ? 'border-primary shadow-lg scale-105'
-                        : 'border-base-300 hover:border-primary/50'
-                    }`}
+                    className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${showVideo
+                      ? 'border-primary shadow-lg scale-105'
+                      : 'border-base-300 hover:border-primary/50'
+                      }`}
                   >
                     <img
                       src={`https://img.youtube.com/vi/${videoId}/default.jpg`}
