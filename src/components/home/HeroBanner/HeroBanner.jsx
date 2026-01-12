@@ -1,11 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { HiArrowRight, HiCheckCircle } from 'react-icons/hi';
 import { MdInventory, MdTrendingUp, MdSpeed } from 'react-icons/md';
 import Container from '../../common/Container/Container';
 
+// Count-up hook - animates once, accurate final value
+const useCountUp = (end, duration = 2000) => {
+  const [count, setCount] = useState(0);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
+
+    let startTime = null;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // Ease-out for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration]);
+
+  return count;
+};
+
 const HeroBanner = () => {
+  // Scroll indicator visibility state
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const hasScrolled = useRef(false);
+
+  // Count-up values
+  const productsCount = useCountUp(500, 2000);
+  const ordersCount = useCountUp(1000, 2500);
+  const satisfactionCount = useCountUp(98, 1800);
+
+  // Hide scroll indicator on first scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasScrolled.current && window.scrollY > 10) {
+        hasScrolled.current = true;
+        setShowScrollIndicator(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -148,25 +193,35 @@ const HeroBanner = () => {
             </Link>
           </motion.div>
 
-          {/* Stats */}
+          {/* Stats with Count-up */}
           <motion.div
             variants={itemVariants}
             className="grid grid-cols-3 gap-6 pt-8 border-t border-base-300"
           >
-            {[
-              { value: '500+', label: 'Products' },
-              { value: '1000+', label: 'Orders' },
-              { value: '98%', label: 'Satisfaction' },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <h3 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {stat.value}
-                </h3>
-                <p className="text-sm text-base-content/60 font-medium">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {productsCount}+
+              </h3>
+              <p className="text-sm text-base-content/60 font-medium">
+                Products
+              </p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {ordersCount}+
+              </h3>
+              <p className="text-sm text-base-content/60 font-medium">
+                Orders
+              </p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {satisfactionCount}%
+              </h3>
+              <p className="text-sm text-base-content/60 font-medium">
+                Satisfaction
+              </p>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -270,34 +325,38 @@ const HeroBanner = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="flex flex-col items-center gap-2"
-        >
-          <span className="text-sm font-medium text-base-content/60">
-            Scroll to explore
-          </span>
-          <div className="w-6 h-10 border-2 border-base-content/30 rounded-full flex justify-center">
+      {/* Scroll Indicator - Hidden on mobile, fades out on scroll */}
+      <AnimatePresence>
+        {showScrollIndicator && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2"
+          >
             <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="w-1.5 h-1.5 bg-primary rounded-full mt-2"
-            ></motion.div>
-          </div>
-        </motion.div>
-      </motion.div>
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex flex-col items-center gap-2"
+            >
+              <span className="text-sm font-medium text-base-content/60">
+                Scroll to explore
+              </span>
+              <div className="w-6 h-10 border-2 border-base-content/30 rounded-full flex justify-center">
+                <motion.div
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  className="w-1.5 h-1.5 bg-primary rounded-full mt-2"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Container>
   );
 };
