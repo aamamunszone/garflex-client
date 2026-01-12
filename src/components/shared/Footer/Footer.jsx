@@ -39,34 +39,34 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      icon: FaFacebookF,
-      url: 'https://facebook.com',
-      label: 'Facebook',
-      color: 'hover:text-[#1877F2]',
-    },
-    {
-      icon: FaXTwitter,
-      url: 'https://twitter.com',
-      label: 'Twitter',
-      color: 'hover:text-[#000000]',
+      icon: FaGithub,
+      url: 'https://github.com/aamamunszone',
+      label: 'GitHub',
+      color: 'hover:text-[#6e5494]',
     },
     {
       icon: FaLinkedinIn,
-      url: 'https://linkedin.com',
+      url: 'https://linkedin.com/in/aamamunszone',
       label: 'LinkedIn',
       color: 'hover:text-[#0A66C2]',
     },
     {
-      icon: FaInstagram,
-      url: 'https://instagram.com',
-      label: 'Instagram',
-      color: 'hover:text-[#E4405F]',
+      icon: FaXTwitter,
+      url: 'https://twitter.com/aamamunszone',
+      label: 'Twitter',
+      color: 'hover:text-[#000000]',
     },
     {
-      icon: FaGithub,
-      url: 'https://github.com',
-      label: 'GitHub',
-      color: 'hover:text-base-content',
+      icon: FaFacebookF,
+      url: 'https://facebook.com/aamamunszone',
+      label: 'Facebook',
+      color: 'hover:text-[#1877F2]',
+    },
+    {
+      icon: FaInstagram,
+      url: 'https://instagram.com/aamamunszone',
+      label: 'Instagram',
+      color: 'hover:text-[#E4405F]',
     },
   ];
 
@@ -138,8 +138,9 @@ const Footer = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg bg-base-300/50 border border-base-300 text-base-content/60 ${social.color} transition-all duration-300 hover:border-current hover:bg-base-200`}
+                  whileHover={{ scale: 1.15, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg bg-base-300/50 border border-base-300 text-base-content/60 ${social.color} transition-all duration-300 hover:border-current hover:bg-base-200 shadow-sm hover:shadow-md`}
                 >
                   <social.icon className="text-lg" />
                 </motion.a>
@@ -161,13 +162,15 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-sm text-base-content/70 hover:text-primary transition-colors duration-300 flex items-center gap-2 group"
-                  >
-                    <span className="w-0 h-0.5 bg-linear-to-r from-primary to-secondary rounded-full group-hover:w-4 transition-all duration-300"></span>
-                    {link.label}
-                  </Link>
+                  <motion.div whileHover={{ x: 5 }} className="inline-block">
+                    <Link
+                      to={link.path}
+                      className="text-sm text-base-content/70 hover:text-primary transition-colors duration-300 flex items-center gap-2 group"
+                    >
+                      <span className="w-0 h-0.5 bg-linear-to-r from-primary to-secondary rounded-full group-hover:w-4 transition-all duration-300"></span>
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 </li>
               ))}
             </ul>
@@ -187,13 +190,15 @@ const Footer = () => {
             <ul className="space-y-3">
               {supportLinks.map((link) => (
                 <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-sm text-base-content/70 hover:text-secondary transition-colors duration-300 flex items-center gap-2 group"
-                  >
-                    <span className="w-0 h-0.5 bg-linear-to-r from-secondary to-accent rounded-full group-hover:w-4 transition-all duration-300"></span>
-                    {link.label}
-                  </Link>
+                  <motion.div whileHover={{ x: 5 }} className="inline-block">
+                    <Link
+                      to={link.path}
+                      className="text-sm text-base-content/70 hover:text-secondary transition-colors duration-300 flex items-center gap-2 group"
+                    >
+                      <span className="w-0 h-0.5 bg-linear-to-r from-secondary to-accent rounded-full group-hover:w-4 transition-all duration-300"></span>
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 </li>
               ))}
             </ul>
@@ -212,13 +217,23 @@ const Footer = () => {
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm text-base-content/70 group">
-                <MdLocationOn className="text-xl text-primary mt-0.5 group-hover:scale-110 transition-transform duration-300" />
+                <motion.div
+                  whileHover={{ scale: 1.15, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <MdLocationOn className="text-xl text-primary mt-0.5 transition-transform duration-300" />
+                </motion.div>
                 <span className="group-hover:text-base-content transition-colors duration-300">
                   123 Garment Street, Rangpur, Bangladesh
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm text-base-content/70 group">
-                <MdEmail className="text-xl text-secondary group-hover:scale-110 transition-transform duration-300" />
+                <motion.div
+                  whileHover={{ scale: 1.15, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <MdEmail className="text-xl text-secondary transition-transform duration-300" />
+                </motion.div>
                 <a
                   href="mailto:support@garflex.com"
                   className="group-hover:text-base-content transition-colors duration-300"
@@ -227,7 +242,12 @@ const Footer = () => {
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-base-content/70 group">
-                <MdPhone className="text-xl text-accent group-hover:scale-110 transition-transform duration-300" />
+                <motion.div
+                  whileHover={{ scale: 1.15, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <MdPhone className="text-xl text-accent transition-transform duration-300" />
+                </motion.div>
                 <a
                   href="tel:+8801712345678"
                   className="group-hover:text-base-content transition-colors duration-300"
@@ -288,7 +308,7 @@ const Footer = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.1, y: -2 }}
+            whileHover={{ scale: 1.15, y: -3 }}
             whileTap={{ scale: 0.95 }}
             className="w-10 h-10 flex items-center justify-center rounded-lg bg-linear-to-br from-primary to-secondary text-primary-content shadow-lg hover:shadow-xl transition-all duration-300 group"
             aria-label="Scroll to top"
