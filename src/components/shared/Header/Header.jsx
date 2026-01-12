@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
-import { MdLogout } from 'react-icons/md';
+import { MdLogout, MdDashboard, MdPerson } from 'react-icons/md';
 import Container from '../../common/Container/Container';
 import NavItem from './NavItem/NavItem';
 import ThemeToggleButton from '../../ui/ThemeToggleButton/ThemeToggleButton';
@@ -15,11 +15,31 @@ import useRole from '../../../hooks/useRole';
 const Header = () => {
   const { user, signOutUser, loading } = useAuth();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { role, roleLoading } = useRole();
+  const profileRef = useRef(null);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (loading || roleLoading) {
     return <Loader />;
   }
+
+  // Get profile route based on role
+  const getProfileRoute = () => {
+    if (role === 'Manager') return '/dashboard/manager-profile';
+    if (role === 'Buyer') return '/dashboard/buyer-profile';
+    return '/dashboard';
+  };
 
   const handleSignOut = async () => {
     try {
@@ -53,6 +73,7 @@ const Header = () => {
     { path: '/all-products', label: 'All Products' },
     { path: '/services', label: 'Services' },
     { path: '/dashboard', label: 'Dashboard' },
+    { path: '/contact', label: 'Contact' },
   ];
 
   const navItems = user ? privateNavItems : publicNavItems;
@@ -111,51 +132,117 @@ const Header = () => {
 
             {user ? (
               <>
-                {/* User Info Card */}
-                <div className="flex items-center gap-3 px-4 py-2 bg-linear-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
-                  {/* Avatar with Status */}
-                  <div className="relative">
-                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
-                      <img
-                        referrerPolicy="no-referrer"
-                        src={user?.photoURL}
-                        className="w-full h-full object-cover"
-                        alt={user?.displayName}
-                      />
+                {/* Profile Dropdown */}
+                <div className="relative" ref={profileRef}>
+                  {/* Profile Trigger Button */}
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-3 px-3 py-1.5 bg-base-100 border border-base-300 hover:border-primary/30 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
+                  >
+                    {/* Avatar with Status */}
+                    <div className="relative">
+                      <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/30 group-hover:border-primary/50 transition-colors duration-300">
+                        <img
+                          referrerPolicy="no-referrer"
+                          src={user?.photoURL}
+                          className="w-full h-full object-cover"
+                          alt={user?.displayName}
+                        />
+                      </div>
+                      {/* Active Status Dot */}
+                      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-sm"></span>
                     </div>
-                    {/* Active Status Dot - Prominent */}
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-base-100 shadow-md shadow-success/50 ring-1 ring-success/30"></span>
-                  </div>
 
-                  {/* User Details */}
-                  <div className="flex flex-col">
-                    <p className="text-sm font-semibold text-base-content">
-                      {user?.displayName}
-                    </p>
-                    <p className="text-xs font-medium text-primary">{role}</p>
-                  </div>
+                    {/* User Details */}
+                    <div className="flex flex-col items-start">
+                      <p className="text-sm font-semibold text-base-content leading-tight">
+                        {user?.displayName}
+                      </p>
+                      <p className="text-xs font-medium text-primary/80">{role}</p>
+                    </div>
+
+                    {/* Dropdown Arrow */}
+                    <svg
+                      className={`w-4 h-4 text-base-content/50 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Profile Dropdown Menu */}
+                  <AnimatePresence>
+                    {isProfileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.15, ease: 'easeOut' }}
+                        className="absolute right-0 mt-2 w-56 bg-base-100 border border-base-300 rounded-xl shadow-lg overflow-hidden z-50"
+                      >
+                        {/* User Info Header */}
+                        <div className="px-4 py-3 bg-base-200/50 border-b border-base-300">
+                          <p className="text-sm font-semibold text-base-content truncate">
+                            {user?.displayName}
+                          </p>
+                          <p className="text-xs text-base-content/60 truncate">
+                            {user?.email}
+                          </p>
+                        </div>
+
+                        {/* Menu Items */}
+                        <div className="py-1.5">
+                          <Link
+                            to={getProfileRoute()}
+                            onClick={() => setIsProfileOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-base-content/80 hover:text-primary hover:bg-primary/5 transition-colors duration-200"
+                          >
+                            <MdPerson className="text-lg" />
+                            <span>My Profile</span>
+                          </Link>
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setIsProfileOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-base-content/80 hover:text-primary hover:bg-primary/5 transition-colors duration-200"
+                          >
+                            <MdDashboard className="text-lg" />
+                            <span>Dashboard</span>
+                          </Link>
+                        </div>
+
+                        {/* Logout Section */}
+                        <div className="border-t border-base-300 py-1.5">
+                          <button
+                            onClick={() => {
+                              setIsProfileOpen(false);
+                              handleSignOut();
+                            }}
+                            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-error/80 hover:text-error hover:bg-error/5 transition-colors duration-200 cursor-pointer"
+                          >
+                            <MdLogout className="text-lg" />
+                            <span>Logout</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                {/* Logout Button */}
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-base-content/80 hover:text-error border border-base-300 hover:border-error/50 rounded-lg transition-all duration-300 hover:bg-error/5 group cursor-pointer"
-                >
-                  <MdLogout className="text-lg group-hover:translate-x-0.5 transition-transform duration-300" />
-                  <span>Logout</span>
-                </button>
               </>
             ) : (
               <>
+                {/* Login Button - Secondary Style */}
                 <Link
                   to="/auth/login"
-                  className="px-5 py-2 text-sm font-medium text-base-content/80 hover:text-primary border border-base-300 hover:border-primary/50 rounded-lg transition-all duration-300 hover:bg-primary/5"
+                  className="px-5 py-2.5 text-sm font-medium text-base-content/80 hover:text-primary bg-base-100 border border-base-300 hover:border-primary/40 rounded-lg transition-all duration-200 hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 >
                   Login
                 </Link>
+                {/* Register Button - Primary Style */}
                 <Link
                   to="/auth/register"
-                  className="px-5 py-2 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105"
+                  className="px-5 py-2.5 text-sm font-semibold text-primary-content bg-primary hover:bg-primary/90 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   Get Started
                 </Link>
@@ -164,11 +251,11 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2.5">
             {/* Mobile Avatar (Only show when logged in) */}
             {user && (
               <div className="relative">
-                <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/40 ring-2 ring-primary/10">
                   <img
                     referrerPolicy="no-referrer"
                     src={user?.photoURL}
@@ -183,7 +270,7 @@ const Header = () => {
 
             <button
               onClick={toggleDrawer}
-              className="w-10 h-10 flex items-center justify-center text-2xl text-base-content hover:text-primary transition-colors duration-300 hover:bg-primary/10 rounded-lg"
+              className="w-11 h-11 flex items-center justify-center text-[26px] text-base-content hover:text-primary transition-colors duration-200 hover:bg-primary/10 rounded-xl"
               aria-label="Toggle Menu"
             >
               {isDrawerOpen ? <HiX /> : <HiMenuAlt3 />}
@@ -297,24 +384,26 @@ const Header = () => {
                 {user ? (
                   <button
                     onClick={handleSignOut}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-error border border-error/30 hover:border-error hover:bg-error/10 rounded-lg transition-all duration-300"
+                    className="w-full flex items-center justify-center gap-2.5 px-4 py-3 text-sm font-medium text-error bg-error/5 border border-error/20 hover:border-error/40 hover:bg-error/10 rounded-xl transition-all duration-200 cursor-pointer"
                   >
                     <MdLogout className="text-lg" />
                     <span>Logout</span>
                   </button>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
+                    {/* Login Button - Secondary */}
                     <Link
                       to="/auth/login"
                       onClick={closeDrawer}
-                      className="w-full block text-center px-4 py-3 text-sm font-medium text-base-content/80 border border-base-300 hover:border-primary/50 hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-300"
+                      className="w-full block text-center px-4 py-3 text-sm font-medium text-base-content/80 bg-base-100 border border-base-300 hover:border-primary/40 hover:text-primary hover:bg-primary/5 rounded-xl transition-all duration-200"
                     >
                       Login
                     </Link>
+                    {/* Register Button - Primary */}
                     <Link
                       to="/auth/register"
                       onClick={closeDrawer}
-                      className="w-full block text-center px-4 py-3 text-sm font-medium text-primary-content bg-linear-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 rounded-lg transition-all duration-300 shadow-md"
+                      className="w-full block text-center px-4 py-3 text-sm font-semibold text-primary-content bg-primary hover:bg-primary/90 rounded-xl transition-all duration-200 shadow-sm"
                     >
                       Get Started
                     </Link>
