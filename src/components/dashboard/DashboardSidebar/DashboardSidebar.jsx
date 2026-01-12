@@ -44,6 +44,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   // Role-based menu items
   const adminMenuItems = [
+    { path: '/dashboard', label: 'Dashboard Home', icon: MdHome },
     { path: '/dashboard/manage-users', label: 'Manage Users', icon: MdPeople },
     {
       path: '/dashboard/all-products',
@@ -58,6 +59,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   ];
 
   const managerMenuItems = [
+    { path: '/dashboard', label: 'Dashboard Home', icon: MdHome },
     { path: '/dashboard/add-product', label: 'Add Product', icon: MdAddCircle },
     {
       path: '/dashboard/manage-products',
@@ -78,6 +80,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   ];
 
   const buyerMenuItems = [
+    { path: '/dashboard', label: 'Dashboard Home', icon: MdHome },
     { path: '/dashboard/my-orders', label: 'My Orders', icon: FiPackage },
 
     { path: '/dashboard/buyer-profile', label: 'My Profile', icon: MdPerson },
@@ -187,10 +190,13 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           {/* Role-based Menu Items */}
           {menuItems.map((item) => {
             const Icon = item.icon;
+            // Use 'end' prop for exact path matching on Dashboard Home
+            const isExactMatch = item.path === '/dashboard';
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
+                end={isExactMatch}
                 onClick={handleNavClick}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group ${
