@@ -145,11 +145,11 @@ const KeyAdvantages = () => {
               {/* Icon Container */}
               <div className="mb-4 inline-block">
                 <div
-                  className={`w-14 h-14 rounded-xl bg-linear-to-br ${advantage.color} p-0.5 shadow-lg`}
+                  className={`w-14 h-14 rounded-xl bg-linear-to-br ${advantage.color} p-0.5 shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
                 >
                   <div className="w-full h-full bg-base-100 rounded-xl flex items-center justify-center">
                     <advantage.icon
-                      className={`text-2xl bg-linear-to-br ${advantage.color} bg-clip-text text-transparent`}
+                      className="text-2xl text-primary group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
                 </div>

@@ -5,6 +5,10 @@ import CustomerFeedback from '../../components/home/CustomerFeedback/CustomerFee
 import KeyAdvantages from '../../components/home/KeyAdvantages/KeyAdvantages';
 import PricingAndPlans from '../../components/home/PricingAndPlans/PricingAndPlans';
 import OurProducts from '../../components/home/OurProducts/OurProducts';
+import PerformanceMetrics from '../../components/home/PerformanceMetrics/PerformanceMetrics';
+import IntegrationPartners from '../../components/home/IntegrationPartners/IntegrationPartners';
+import SecurityCompliance from '../../components/home/SecurityCompliance/SecurityCompliance';
+import CallToAction from '../../components/home/CallToAction/CallToAction';
 
 const Home = () => {
   return (
@@ -36,9 +40,29 @@ const Home = () => {
         <KeyAdvantages />
       </section>
 
-      {/* PricingAndPlans Section */}
+      {/* PerformanceMetrics Section */}
+      <section>
+        <PerformanceMetrics />
+      </section>
+
+      {/* IntegrationPartners Section */}
+      <section>
+        <IntegrationPartners />
+      </section>
+
+      {/* SecurityCompliance Section */}
+      <section>
+        <SecurityCompliance />
+      </section>
+
+      {/* PricingAndPlans Section - Moved before CTA */}
       <section>
         <PricingAndPlans />
+      </section>
+
+      {/* CallToAction Section */}
+      <section>
+        <CallToAction />
       </section>
     </div>
   );

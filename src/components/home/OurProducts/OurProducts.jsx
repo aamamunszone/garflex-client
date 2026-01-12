@@ -50,6 +50,24 @@ const OurProducts = () => {
     );
   }
 
+  const textVariant = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: 'easeOut' },
+    },
+  };
+
+  const textRightVariant = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: 'easeOut' },
+    },
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -80,32 +98,34 @@ const OurProducts = () => {
   return (
     <Container className="py-10 px-4 rounded-xl bg-base-100 overflow-hidden">
       {/* Section Header */}
-      <motion.div
-        className="text-center mb-16"
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <motion.h2
-          className="text-4xl md:text-5xl font-black mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+      <div className="text-center mb-16 space-y-4 relative z-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={textVariant}
         >
-          <span className={headerGradient}>Recent Products</span>
-        </motion.h2>
+          <span className="text-primary font-bold tracking-wider uppercase text-sm bg-primary/10 px-4 py-1 rounded-full border border-primary/20">
+            Products
+          </span>
+          <h2 className="text-4xl md:text-5xl font-black text-base-content mt-4">
+            Recent{' '}
+            <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              Products
+            </span>
+          </h2>
+        </motion.div>
+
         <motion.p
-          className="text-lg md:text-xl text-base-content/70 max-w-2xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.8 }}
+          variants={textRightVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-base-content/70 max-w-2xl mx-auto text-lg"
         >
           Explore our newly added and trending garment items
         </motion.p>
-      </motion.div>
+      </div>
 
       {/* Products Grid */}
       <motion.div
