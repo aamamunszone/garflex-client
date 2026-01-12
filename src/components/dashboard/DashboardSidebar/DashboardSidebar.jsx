@@ -56,6 +56,7 @@ const DashboardSidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       label: 'All Orders',
       icon: MdShoppingCart,
     },
+    { path: '/dashboard/admin-profile', label: 'My Profile', icon: MdPerson },
   ];
 
   const managerMenuItems = [

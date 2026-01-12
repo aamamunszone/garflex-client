@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCards } from 'swiper/modules';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 import { FiEdit2, FiActivity, FiShield, FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
 import 'swiper/css';
@@ -20,10 +21,24 @@ import 'swiper/css/effect-cards';
 
 import Container from '../../../../components/common/Container/Container';
 import useAuth from '../../../../hooks/useAuth';
+import useAxiosSecure from '../../../../hooks/useAxiosSecure';
+import EditProfileModal from '../../../../components/dashboard/EditProfileModal/EditProfileModal';
 
 const MyProfile = () => {
   const { user, signOutUser } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // Fetch user data from database
+  const { data: userData, refetch } = useQuery({
+    queryKey: ['user-profile', user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get('/users/me');
+      return res.data?.data;
+    },
+  });
 
   const handleLogOut = async () => {
     try {
@@ -112,7 +127,10 @@ const MyProfile = () => {
                   </div>
                 </div>
 
-                <button className="btn btn-primary btn-block rounded-2xl mt-8 shadow-lg shadow-primary/20 gap-2 cursor-pointer border-none">
+                <button
+                  onClick={() => setShowEditModal(true)}
+                  className="btn btn-primary btn-block rounded-2xl mt-8 shadow-lg shadow-primary/20 gap-2 cursor-pointer border-none"
+                >
                   <FiEdit2 /> Edit Profile
                 </button>
               </div>
@@ -234,6 +252,21 @@ const MyProfile = () => {
           </div>
         </div>
       </Container>
+
+      {/* Edit Profile Modal */}
+      <AnimatePresence>
+        {showEditModal && (
+          <EditProfileModal
+            user={user}
+            userData={userData}
+            onClose={() => setShowEditModal(false)}
+            onSuccess={() => {
+              refetch();
+              setShowEditModal(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

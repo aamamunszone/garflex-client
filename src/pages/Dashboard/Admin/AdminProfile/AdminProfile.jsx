@@ -6,13 +6,13 @@ import {
   MdVerified,
   MdLogout,
   MdOutlineMail,
-  MdPhone,
-  MdLocationOn,
+  MdSecurity,
+  MdAdminPanelSettings,
+  MdPeople,
+  MdInventory,
   MdShoppingCart,
-  MdLocalShipping,
-  MdFavorite,
 } from 'react-icons/md';
-import { FiEdit2, FiActivity, FiShield, FiPackage } from 'react-icons/fi';
+import { FiEdit2, FiActivity, FiShield, FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -25,7 +25,7 @@ import useAuth from '../../../../hooks/useAuth';
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import EditProfileModal from '../../../../components/dashboard/EditProfileModal/EditProfileModal';
 
-const BuyerProfile = () => {
+const AdminProfile = () => {
   const { user, signOutUser } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const BuyerProfile = () => {
       toast.success('Logged out successfully');
       navigate('/auth/login');
     } catch (error) {
-      toast.error('Logout failed', error);
+      toast.error('Logout failed');
     }
   };
 
@@ -57,9 +57,9 @@ const BuyerProfile = () => {
         {/* --- Top Action Bar --- */}
         <div className="flex justify-between items-center mb-10 px-4">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-8 bg-secondary rounded-full"></div>
+            <div className="w-2 h-8 bg-error rounded-full"></div>
             <h1 className="text-2xl font-black tracking-tighter uppercase italic text-base-content">
-              Buyer Dashboard
+              Admin Control Panel
             </h1>
           </div>
           <button
@@ -78,9 +78,9 @@ const BuyerProfile = () => {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-4"
           >
-            <div className="bg-base-100 rounded-[3rem] p-8 shadow-2xl shadow-secondary/5 border border-base-300 text-center relative overflow-hidden">
+            <div className="bg-base-100 rounded-[3rem] p-8 shadow-2xl shadow-error/5 border border-base-300 text-center relative overflow-hidden">
               {/* Background Accent */}
-              <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-secondary/10 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-error/10 to-transparent"></div>
 
               <div className="relative pt-4">
                 <div className="relative inline-block group">
@@ -91,46 +91,47 @@ const BuyerProfile = () => {
                         user?.photoURL ||
                         'https://i.ibb.co/3S3s8Vj/user-placeholder.png'
                       }
-                      alt="Buyer"
+                      alt="Admin"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
-                  <div className="absolute -bottom-2 -right-2 bg-secondary text-white p-2 rounded-xl shadow-lg border-2 border-base-100">
+                  <div className="absolute -bottom-2 -right-2 bg-error text-white p-2 rounded-xl shadow-lg border-2 border-base-100">
                     <MdVerified size={20} />
                   </div>
                 </div>
 
                 <div className="mt-6">
                   <h2 className="text-2xl font-black text-base-content leading-tight">
-                    {user?.displayName || 'Valued Buyer'}
+                    {user?.displayName || 'System Administrator'}
                   </h2>
-                  <p className="text-secondary font-bold text-sm uppercase tracking-[0.2em] mt-1">
-                    Premium Member
+                  <p className="text-error font-bold text-sm uppercase tracking-[0.2em] mt-1">
+                    Super Admin
                   </p>
                 </div>
 
                 <div className="mt-8 space-y-3">
                   <div className="flex items-center justify-between bg-base-200 p-4 rounded-2xl">
                     <span className="text-xs font-black opacity-40 uppercase">
-                      Membership
+                      Access Level
                     </span>
-                    <span className="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-wider">
-                      Gold Tier
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-error bg-error/10 px-3 py-1 rounded-full uppercase tracking-wider">
+                      <MdSecurity size={14} /> Full Control
                     </span>
                   </div>
                   <div className="flex items-center justify-between bg-base-200 p-4 rounded-2xl">
                     <span className="text-xs font-black opacity-40 uppercase">
-                      Total Spent
+                      Status
                     </span>
-                    <span className="text-sm font-black text-secondary">
-                      $1,240.50
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-success bg-success/10 px-3 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>{' '}
+                      Online
                     </span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="btn btn-secondary btn-block rounded-2xl mt-8 shadow-lg shadow-secondary/20 gap-2 cursor-pointer border-none text-white"
+                  className="btn btn-error btn-block rounded-2xl mt-8 shadow-lg shadow-error/20 gap-2 cursor-pointer border-none text-white"
                 >
                   <FiEdit2 /> Edit Profile
                 </button>
@@ -149,36 +150,36 @@ const BuyerProfile = () => {
               {/* Personal Info */}
               <div className="bg-base-100 p-8 rounded-[2.5rem] border border-base-300 shadow-sm hover:shadow-md transition-all">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-primary/10 text-primary rounded-2xl">
-                    <FiPackage size={24} />
+                  <div className="p-3 bg-error/10 text-error rounded-2xl">
+                    <MdAdminPanelSettings size={24} />
                   </div>
-                  <h3 className="font-black text-lg">Delivery Information</h3>
+                  <h3 className="font-black text-lg">Administrator Info</h3>
                 </div>
                 <div className="space-y-4">
                   <DetailItem
                     icon={<MdOutlineMail />}
-                    label="Email Address"
+                    label="Admin Email"
                     value={user?.email}
                   />
                   <DetailItem
-                    icon={<MdPhone />}
-                    label="Contact Number"
-                    value="+880 1XXXXXXXXX"
+                    icon={<MdSecurity />}
+                    label="Role"
+                    value={userData?.role || 'Admin'}
                   />
                   <DetailItem
-                    icon={<MdLocationOn />}
-                    label="Default Address"
-                    value="Dhaka, Bangladesh"
+                    icon={<MdVerified />}
+                    label="Account Status"
+                    value={userData?.status || 'Approved'}
                   />
                 </div>
               </div>
 
-              {/* Shopping Insights Swiper */}
-              <div className="bg-secondary p-8 rounded-[2.5rem] text-white shadow-xl shadow-secondary/20 relative overflow-hidden group">
+              {/* System Statistics Swiper */}
+              <div className="bg-error p-8 rounded-[2.5rem] text-white shadow-xl shadow-error/20 relative overflow-hidden group">
                 <div className="relative z-10 h-full">
                   <div className="flex items-center gap-3 mb-6">
                     <FiActivity className="text-2xl" />
-                    <h3 className="font-bold text-lg">Shopping Activity</h3>
+                    <h3 className="font-bold text-lg">System Overview</h3>
                   </div>
                   <Swiper
                     effect={'cards'}
@@ -187,22 +188,25 @@ const BuyerProfile = () => {
                     autoplay={{ delay: 2800 }}
                     className="w-full max-w-60"
                   >
-                    <SwiperSlide className="bg-white text-secondary p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
-                      <h4 className="text-3xl font-black">08</h4>
+                    <SwiperSlide className="bg-white text-error p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
+                      <MdPeople className="text-3xl mb-2" />
+                      <h4 className="text-2xl font-black">Users</h4>
                       <p className="text-xs font-bold uppercase opacity-60">
-                        Orders Completed
+                        Manage Platform
                       </p>
                     </SwiperSlide>
-                    <SwiperSlide className="bg-accent text-neutral p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
-                      <h4 className="text-3xl font-black">02</h4>
+                    <SwiperSlide className="bg-info text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
+                      <MdInventory className="text-3xl mb-2" />
+                      <h4 className="text-2xl font-black">Products</h4>
                       <p className="text-xs font-bold uppercase opacity-60">
-                        On The Way
+                        Review & Approve
                       </p>
                     </SwiperSlide>
-                    <SwiperSlide className="bg-neutral text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
-                      <h4 className="text-3xl font-black">15</h4>
+                    <SwiperSlide className="bg-success text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
+                      <MdShoppingCart className="text-3xl mb-2" />
+                      <h4 className="text-2xl font-black">Orders</h4>
                       <p className="text-xs font-bold uppercase opacity-60">
-                        Wishlist Items
+                        Monitor System
                       </p>
                     </SwiperSlide>
                   </Swiper>
@@ -211,42 +215,44 @@ const BuyerProfile = () => {
               </div>
             </motion.div>
 
-            {/* Buyer Quick Links */}
+            {/* Admin Quick Actions */}
             <div className="bg-base-100 p-8 rounded-[2.5rem] border border-base-300 shadow-sm">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-xl font-black flex items-center gap-2 italic">
-                  <FiShield className="text-secondary" /> Account Security
+                  <FiShield className="text-error" /> Security & Control
                 </h3>
                 <span className="text-[10px] bg-base-200 px-3 py-1 rounded-full font-black opacity-50 uppercase tracking-widest">
-                  Verified Account
+                  Highest Privilege
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <ActionButton
-                  icon={<MdShoppingCart />}
-                  label="Cart"
+                  icon={<MdPeople />}
+                  label="Manage Users"
                   color="text-info"
-                  onClick={() => navigate('/cart')}
+                  onClick={() => navigate('/dashboard/manage-users')}
                 />
                 <ActionButton
-                  icon={<MdLocalShipping />}
-                  label="Track Orders"
+                  icon={<MdInventory />}
+                  label="All Products"
                   color="text-warning"
-                  onClick={() => navigate('/dashboard/my-orders')}
+                  onClick={() => navigate('/dashboard/all-products')}
                 />
                 <ActionButton
-                  icon={<MdFavorite />}
-                  label="Wishlist"
-                  color="text-error"
+                  icon={<MdShoppingCart />}
+                  label="All Orders"
+                  color="text-success"
+                  onClick={() => navigate('/dashboard/all-orders')}
                 />
               </div>
 
               <div className="mt-8 p-6 bg-base-200 rounded-4xl border border-dashed border-base-300">
                 <p className="text-sm font-medium opacity-60 leading-relaxed italic text-center">
-                  "Thank you for being with{' '}
-                  <span className="text-secondary font-bold">GarFlex</span>.
-                  Check your orders and enjoy exclusive member discounts."
+                  "As an administrator of{' '}
+                  <span className="text-error font-bold">GarFlex</span>, you
+                  have complete control over the platform. Use your power
+                  responsibly to ensure smooth operations."
                 </p>
               </div>
             </div>
@@ -275,7 +281,7 @@ const BuyerProfile = () => {
 // --- Reusable Small Components ---
 const DetailItem = ({ icon, label, value }) => (
   <div className="flex items-center gap-4 group cursor-pointer">
-    <div className="text-secondary opacity-60 group-hover:opacity-100 transition-opacity">
+    <div className="text-error opacity-60 group-hover:opacity-100 transition-opacity">
       {React.cloneElement(icon, { size: 20 })}
     </div>
     <div className="flex-1">
@@ -292,7 +298,7 @@ const DetailItem = ({ icon, label, value }) => (
 const ActionButton = ({ icon, label, color, onClick }) => (
   <div
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-6 bg-base-200/50 rounded-3xl border border-base-300 hover:border-secondary/40 hover:bg-base-100 transition-all cursor-pointer group"
+    className="flex flex-col items-center justify-center p-6 bg-base-200/50 rounded-3xl border border-base-300 hover:border-error/40 hover:bg-base-100 transition-all cursor-pointer group"
   >
     <div className={`${color} mb-3 group-hover:scale-110 transition-transform`}>
       {React.cloneElement(icon, { size: 28 })}
@@ -301,4 +307,4 @@ const ActionButton = ({ icon, label, color, onClick }) => (
   </div>
 );
 
-export default BuyerProfile;
+export default AdminProfile;
